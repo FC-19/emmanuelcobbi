@@ -1,0 +1,59 @@
+---
+import { nav, profile, contact } from "../content/site";
+
+const currentPath = Astro.url.pathname;
+const isHome = currentPath === "/" || currentPath === "";
+---
+
+<header class="site-header" data-site-header>
+  <nav class="shell site-header__row" aria-label="Primary">
+    <div class="site-header__nav">
+      <button
+        type="button"
+        class="menu-toggle"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="site-menu"
+      >
+        <span class="sr-only">Open menu</span>
+        <span class="menu-toggle__bars" aria-hidden="true"><i></i><i></i></span>
+      </button>
+
+      {
+        nav.map((item) => (
+          <a class="nav-link" href={isHome ? `#${item.href.split("#")[1]}` : item.href}>
+            {item.label}
+          </a>
+        ))
+      }
+    </div>
+
+    <a class="brandmark" href="/" aria-label={`${profile.name} — home`}>
+      Emmanuel Cobbi <span aria-hidden="true">/</span>
+      <span>Portfolio</span>
+    </a>
+
+    <div class="site-header__actions">
+      <a class="pill pill--light pill--sm site-header__cta" href={contact.whatsapp}>
+        Let's talk
+      </a>
+    </div>
+  </nav>
+</header>
+
+<div class="mobile-menu" id="site-menu" data-mobile-menu data-open="false">
+  {
+    nav.map((item) => (
+      <a href={isHome ? `#${item.href.split("#")[1]}` : item.href}>{item.label}</a>
+    ))
+  }
+  <div class="mobile-menu__meta">
+    <a href={contact.whatsapp} style="font-size:1rem;text-decoration:underline">
+      {contact.phoneDisplay}
+    </a>
+    <br />
+    <a href={`mailto:${contact.email}`} style="font-size:1rem;text-decoration:underline">
+      {contact.email}
+    </a>
+  </div>
+</div>

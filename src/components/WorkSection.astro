@@ -1,0 +1,200 @@
+---
+import { Image } from "astro:assets";
+import { assets } from "../content/assets";
+import { work, archive, teaching } from "../content/site";
+---
+
+<section class="section section--cream" id="work" data-theme="cream">
+  <div class="shell">
+    <div class="work__head" data-reveal>
+      <p class="eyebrow">Selected work</p>
+      <h2 class="display-2 work__title">Projects I have built, shaped, or written into.</h2>
+      <p class="lede work__lede">
+        Two things take most of my time now: Tribe, and the technology and editorial work
+        behind Bonteh Magazine. Everything else here is real work from the years before.
+      </p>
+    </div>
+
+    <div class="work__rows">
+      {
+        work.map((item, index) => {
+          const media = item.assetKey ? assets[item.assetKey] : null;
+          return (
+            /* The row is not itself a link: it contains an outbound link, and
+               nesting anchors is invalid. The case-study link is stretched
+               across the row instead, with the outbound link layered above. */
+            <div class:list={["work-row", index % 2 === 1 && "work-row--flip"]} data-reveal>
+              <div class="work-row__text">
+                <h3 class="work-row__title">
+                  {item.caseStudy
+                    ? <a class="work-row__link" href={item.caseStudy}>{item.name}</a>
+                    : item.name}
+                </h3>
+                <p class="work-row__meta">
+                  {item.role}
+                  {item.archived ? " · Archived" : ""}
+                </p>
+                <p class="work-row__body">{item.summary}</p>
+                <div class="work__links">
+                  {item.href && (
+                    <a class="arrow-link" href={item.href} rel="noopener">
+                      {item.hrefLabel ?? "Visit"} <span aria-hidden="true">↗</span>
+                    </a>
+                  )}
+                  {item.caseStudy && (
+                    <span class="arrow-link work__case">
+                      Inside the project <span aria-hidden="true">→</span>
+                    </span>
+                  )}
+                </div>
+              </div>
+              {media && (
+                <div class="work-row__media">
+                  <span class="media-frame tilt" style="--rot:-1.4deg">
+                    <Image
+                      src={media.src}
+                      alt={media.alt}
+                      widths={[560, 840, 1120]}
+                      sizes="(min-width: 900px) 34rem, 92vw"
+                      loading="lazy"
+                    />
+                  </span>
+                </div>
+              )}
+            </div>
+          );
+        })
+      }
+    </div>
+
+    <div class="work__archive" data-reveal>
+      <h3 class="display-3 work__archive-title">Earlier and archived work</h3>
+      <p class="work__archive-note">
+        Some of these sites are no longer online and their domains have expired. They are
+        listed as real past work, without links that would send you somewhere unrelated.
+      </p>
+      <ul class="archive-list">
+        {
+          archive.map((item) => (
+            <li>
+              <span class="archive-list__name">{item.name}</span>
+              <span class="archive-list__note">{item.note}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="work__teaching card" data-reveal>
+      <p class="eyebrow">{teaching.eyebrow}</p>
+      <h3 class="display-3 mt-1">{teaching.title}</h3>
+      <p class="work__teaching-body">{teaching.body}</p>
+      <a class="arrow-link mt-1" href={teaching.cta.href} rel="noopener">
+        {teaching.cta.label} <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+
+    <div class="work__strip" data-reveal>
+      <h3 class="eyebrow">Out in the field</h3>
+      <div class="strip">
+        {
+          [
+            assets.eventBanner,
+            assets.eventTable,
+            assets.eventAudience,
+            assets.eventStand,
+            assets.eventPortrait,
+            assets.eventTalkWide,
+          ].map((item) => (
+            <figure class="media-frame tilt" style="--rot:-1.5deg">
+              <Image
+                src={item.src}
+                alt={item.alt}
+                widths={[320, 560]}
+                sizes="272px"
+                loading="lazy"
+              />
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .work__head {
+    max-width: 46rem;
+  }
+
+  .work__title {
+    margin-top: 1rem;
+  }
+
+  .work__lede {
+    margin-top: 1.4rem;
+    max-width: 46ch;
+  }
+
+  .work__rows {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .work__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+    align-items: center;
+  }
+
+  .work__case {
+    color: var(--muted);
+  }
+
+  .work__archive {
+    margin-top: clamp(3rem, 6vw, 5rem);
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .work__archive-title {
+    margin-top: 0;
+  }
+
+  .work__archive-note {
+    margin-top: 0.85rem;
+    max-width: 58ch;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+
+  .archive-list {
+    margin-top: 1.75rem;
+  }
+
+  .work__teaching {
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+    max-width: 44rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .work__teaching-body {
+    margin-top: 1rem;
+    font-size: 1rem;
+    line-height: 1.68;
+    color: rgba(20, 18, 17, 0.76);
+  }
+
+  .work__strip {
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .work__strip .strip {
+    margin-top: 1.25rem;
+  }
+
+  .work__strip figure {
+    margin: 0;
+  }
+</style>

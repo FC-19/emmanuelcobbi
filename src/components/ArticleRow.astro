@@ -1,0 +1,23 @@
+---
+import type { Article } from "../content/site";
+
+interface Props {
+  article: Article;
+  /** Rendered as h2 on standalone pages, h3 inside the homepage section. */
+  headingLevel?: "h2" | "h3";
+  showSource?: boolean;
+}
+
+const { article, headingLevel = "h3", showSource = true } = Astro.props;
+const Heading = headingLevel;
+---
+
+<a class="article-row" href={article.url} rel="noopener">
+  <time class="article-row__date" datetime={article.published}>{article.publishedDisplay}</time>
+  <div class="article-row__main">
+    <Heading class="article-row__title">{article.title}</Heading>
+    <p class="article-row__summary">{article.summary}</p>
+    {showSource && <p class="article-row__source">{article.publication} · by Emmanuel Cobbi</p>}
+  </div>
+  <span class="article-row__go" aria-hidden="true">↗</span>
+</a>

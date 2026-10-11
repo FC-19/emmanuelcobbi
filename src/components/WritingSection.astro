@@ -1,0 +1,60 @@
+---
+import { articles } from "../content/site";
+import ArticleRow from "./ArticleRow.astro";
+---
+
+<section class="section section--paper" id="writing" data-theme="paper">
+  <div class="shell">
+    <div class="writing__head" data-reveal>
+      <p class="eyebrow">Writing</p>
+      <h2 class="display-2 writing__title">
+        Essays about the systems shaping everyday life.
+      </h2>
+      <p class="lede writing__lede">
+        I write for Bonteh Magazine about business, technology, and policy — usually
+        starting from something concrete happening in Cameroon or across Africa.
+      </p>
+    </div>
+
+    <div class="writing__list">
+      {
+        articles.map((article) => (
+          <div data-reveal>
+            <ArticleRow article={article} />
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="writing__actions" data-reveal>
+      <a class="pill pill--ink" href="/writing">See all published writing</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .writing__head {
+    max-width: 44rem;
+  }
+
+  .writing__title {
+    margin-top: 1rem;
+  }
+
+  .writing__lede {
+    margin-top: 1.4rem;
+    max-width: 48ch;
+  }
+
+  .writing__list {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .writing__list > :last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .writing__actions {
+    margin-top: 2.5rem;
+  }
+</style>

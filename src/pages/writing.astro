@@ -1,0 +1,64 @@
+---
+import Base from "../layouts/Base.astro";
+import { articles, links } from "../content/site";
+import ArticleRow from "../components/ArticleRow.astro";
+---
+
+<Base
+  title="Writing"
+  description="Essays and journalism by Emmanuel Cobbi on business, technology, policy and distribution, published in Bonteh Magazine."
+  path="/writing"
+>
+  <section class="page-head" data-theme="cream">
+    <div class="shell">
+      <p class="eyebrow">Writing</p>
+      <h1 class="display-1 page-head__title">
+        I write about the systems shaping everyday life.
+      </h1>
+      <p class="page-head__lede">
+        Essays and reported pieces on business, technology, and policy — usually starting
+        from something concrete happening in Cameroon or across Africa, then asking who it
+        actually reaches.
+      </p>
+      <p class="page-head__meta">
+        Published in <a class="inline-link" href={links.bonteh} rel="noopener">Bonteh Magazine</a>,
+        where I work as CTO, software developer, and writer.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--cream" style="padding-top:0">
+    <div class="shell">
+      <div class="writing__list">
+        {articles.map((article) => <ArticleRow article={article} headingLevel="h2" />)}
+      </div>
+
+      <p class="writing__note">
+        These are the pieces I can verify as published today. Older work exists that I am
+        no longer able to link to reliably, so it is not listed here.
+      </p>
+
+      <div class="actions mt-2">
+        <a class="pill pill--ink" href="/#contact">Work with me</a>
+        <a class="pill pill--ghost" href="/">Back to the homepage</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .writing__list {
+    margin-top: 1rem;
+  }
+
+  .writing__list > :last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .writing__note {
+    margin-top: 2rem;
+    max-width: 52ch;
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+</style>

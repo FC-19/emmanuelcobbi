@@ -1,0 +1,196 @@
+---
+import { Image } from "astro:assets";
+import { assets } from "../content/assets";
+import { tribe } from "../content/site";
+---
+
+<section class="section section--ink" id="tribe" data-theme="ink">
+  <div class="shell">
+    <div class="tribe__head" data-reveal>
+      <div>
+        <p class="eyebrow">{tribe.eyebrow}</p>
+        <h2 class="display-1 tribe__title">{tribe.title}</h2>
+        <p class="tribe__supporting">{tribe.supporting}</p>
+      </div>
+      <div class="tribe__brand">
+        <Image
+          src={assets.tribeLockup.src}
+          alt={assets.tribeLockup.alt}
+          widths={[320, 560]}
+          sizes="(min-width: 900px) 18rem, 60vw"
+          loading="lazy"
+        />
+        <p class="tribe__role">{tribe.role}</p>
+      </div>
+    </div>
+
+    <div class="tribe__body" data-reveal style="--reveal-delay:0.08s">
+      <p class="lede tribe__description">{tribe.description}</p>
+      <p class="tribe__vision">{tribe.vision}</p>
+    </div>
+
+    <ul class="value-list tribe__values" data-reveal style="--reveal-delay:0.12s">
+      {
+        tribe.values.map((value) => (
+          <li class="value">
+            <h3>{value.title}</h3>
+            <p>{value.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="tribe__showcase">
+      <figure class="tribe__shot tribe__shot--web" data-reveal>
+        <span class="media-frame">
+          <Image
+            src={assets.tribeWeb.src}
+            alt={assets.tribeWeb.alt}
+            widths={[720, 1080, 1440]}
+            sizes="(min-width: 1024px) 46rem, 92vw"
+            loading="lazy"
+          />
+        </span>
+        <figcaption>
+          The live Tribe site. Real screenshots of the product are used rather than
+          mock-ups of features that do not exist.
+        </figcaption>
+      </figure>
+
+      <figure class="tribe__shot tribe__shot--app" data-reveal style="--reveal-delay:0.1s">
+        <span class="media-frame">
+          <Image
+            src={assets.tribeAppDesign.src}
+            alt={assets.tribeAppDesign.alt}
+            widths={[360, 540, 720]}
+            sizes="(min-width: 1024px) 16rem, 50vw"
+            loading="lazy"
+          />
+        </span>
+        <figcaption>
+          Tribe app interface design — product design work, with placeholder figures.
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="actions tribe__actions" data-reveal>
+      <a class="pill pill--light" href={tribe.cta.href} rel="noopener">
+        {tribe.cta.label}
+      </a>
+      <a class="pill pill--ghost" href={tribe.ctaSecondary.href}>{tribe.ctaSecondary.label}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tribe__head {
+    display: grid;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  @media (min-width: 900px) {
+    .tribe__head {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 3rem;
+    }
+
+    .tribe__brand {
+      text-align: right;
+      padding-top: 0.5rem;
+    }
+  }
+
+  .tribe__title {
+    margin-top: 1rem;
+  }
+
+  .tribe__supporting {
+    margin-top: 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+    letter-spacing: -0.02em;
+    color: var(--yellow);
+    max-width: 24ch;
+  }
+
+  .tribe__brand img {
+    width: min(100%, 17rem);
+    height: auto;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 900px) {
+    .tribe__brand img {
+      margin-inline: 0 0;
+      margin-left: auto;
+    }
+  }
+
+  .tribe__role {
+    margin-top: 0.85rem;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: rgba(247, 242, 234, 0.6);
+  }
+
+  .tribe__body {
+    margin-top: clamp(2rem, 4vw, 3rem);
+    max-width: 62ch;
+  }
+
+  .tribe__description {
+    color: rgba(247, 242, 234, 0.88);
+  }
+
+  .tribe__vision {
+    margin-top: 1rem;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgba(247, 242, 234, 0.66);
+    max-width: 58ch;
+  }
+
+  .tribe__values {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .tribe__showcase {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    align-items: start;
+  }
+
+  @media (min-width: 1024px) {
+    .tribe__showcase {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.36fr);
+      gap: 3rem;
+    }
+  }
+
+  .tribe__shot {
+    margin: 0;
+  }
+
+  .tribe__shot--web .media-frame {
+    rotate: -1deg;
+  }
+
+  .tribe__shot--app .media-frame {
+    rotate: 2deg;
+  }
+
+  .tribe__shot figcaption {
+    margin-top: 0.9rem;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: rgba(247, 242, 234, 0.55);
+    max-width: 44ch;
+  }
+
+  .tribe__actions {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  }
+</style>

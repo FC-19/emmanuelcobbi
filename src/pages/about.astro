@@ -1,0 +1,206 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import { assets } from "../content/assets";
+import {
+  profile,
+  about,
+  experience,
+  education,
+  capabilities,
+  contact,
+} from "../content/site";
+
+const disciplines = about.disciplines;
+---
+
+<Base
+  title="About"
+  description="Emmanuel Cobbi is a Cameroonian software developer, designer, and author. Founder of Tribe and CTO, software developer, and writer at Bonteh Magazine."
+  path="/about"
+  ogType="profile"
+>
+  <section class="page-head" data-theme="cream">
+    <div class="shell about-head">
+      <div>
+        <p class="eyebrow">About</p>
+        <h1 class="display-1 page-head__title">
+          {profile.name} builds things people can use.
+        </h1>
+        <p class="page-head__lede">
+          {profile.identity} Founder of Tribe. CTO, software developer, and writer at
+          Bonteh Magazine. Based in {profile.location}.
+        </p>
+      </div>
+      <div class="about-head__portrait">
+        <Image
+          src={assets.portraitOriginal.src}
+          alt={assets.portraitOriginal.alt}
+          widths={[320, 480, 640]}
+          sizes="(min-width: 900px) 18rem, 55vw"
+          loading="eager"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream" style="padding-top:clamp(2rem,4vw,3rem)">
+    <div class="shell">
+      <div class="prose-block">
+        {about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+
+        <h2>How I work</h2>
+        <p>
+          I start with the constraint rather than the feature list. Most of the products I
+          admire were built by someone who understood the daily reality of the person
+          using them — the intermittent connection, the shared phone, the customer who
+          pays in cash and expects a receipt in the same conversation.
+        </p>
+        <p>
+          That is also how I read a business. A product is only as good as the work it
+          removes, which is why I keep moving between engineering, design, and writing:
+          each one keeps the other two honest.
+        </p>
+
+        <h2>What I do now</h2>
+        <p>
+          <strong>Tribe</strong> is my main focus. I am its founder and software developer,
+          building an AI-powered platform that brings business tools, commerce, and
+          payments into one connected experience, with Tia available on WhatsApp and the
+          web. You can read more on the <a class="inline-link" href="/work/tribe">Tribe case study</a>.
+        </p>
+        <p>
+          At <strong>Bonteh Magazine</strong> I work as CTO, software developer, and writer —
+          across the publication's digital platform and its reporting on business,
+          technology, and policy. The <a class="inline-link" href="/work/bonteh-magazine">Bonteh case study</a>
+          covers that work, and <a class="inline-link" href="/writing">my published writing</a> is listed separately.
+        </p>
+        <p>
+          I also teach. The <strong>AI Automation Blueprint</strong> is a course about putting
+          AI to practical use in design, video, websites, apps, and automation.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="shell">
+      <h2 class="display-2">Experience</h2>
+      <ul class="timeline mt-2">
+        {
+          experience.map((item) => (
+            <li>
+              <div>
+                <p class="timeline__role">
+                  {item.role}
+                  <span class="timeline__org">{item.org}</span>
+                </p>
+              </div>
+              <p class="timeline__note">{item.note}</p>
+              <p class="timeline__dates">
+                {item.dates ?? (item.current ? "Present" : "")}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <h2 class="display-2 mt-3">Education</h2>
+      {
+        education.map((item) => (
+          <div class="education-row">
+            <p class="timeline__role">
+              {item.qualification}
+              <span class="timeline__org">{item.org}</span>
+            </p>
+            <p class="timeline__dates">{item.dates}</p>
+          </div>
+        ))
+      }
+
+      <h2 class="display-2 mt-3">Capabilities</h2>
+      <div class="capability-grid mt-2">
+        {
+          capabilities.map((item) => (
+            <div class="capability">
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <h2 class="display-2 mt-3">Disciplines</h2>
+      <ul class="bullets">
+        {disciplines.map((item) => <li>{item}</li>)}
+      </ul>
+
+      <p class="about-note">
+        This profile is drawn from my CV and current work. My home address is deliberately
+        not published here. If you need a formal CV document, ask me directly and I will
+        send one.
+      </p>
+
+      <div class="actions mt-2">
+        <a class="pill pill--ink" href={contact.whatsapp} rel="noopener">Ask for the CV</a>
+        <a class="pill pill--ghost" href={`mailto:${contact.email}`}>Email me</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about-head {
+    display: grid;
+    gap: 2.5rem;
+    align-items: end;
+  }
+
+  @media (min-width: 900px) {
+    .about-head {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 3rem;
+    }
+
+    .about-head__portrait {
+      width: 18rem;
+    }
+  }
+
+  .about-head__portrait {
+    width: min(100%, 18rem);
+    border-radius: 8px;
+    overflow: hidden;
+    rotate: -1.5deg;
+    outline: 1px solid rgba(17, 17, 17, 0.08);
+    outline-offset: -1px;
+  }
+
+  .about-head__portrait img {
+    width: 100%;
+    height: auto;
+  }
+
+  .education-row {
+    display: grid;
+    gap: 0.35rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    margin-top: 1.5rem;
+  }
+
+  @media (min-width: 820px) {
+    .education-row {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 2.5rem;
+      align-items: baseline;
+    }
+  }
+
+  .about-note {
+    margin-top: 3rem;
+    max-width: 56ch;
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+</style>

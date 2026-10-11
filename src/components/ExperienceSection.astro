@@ -1,0 +1,106 @@
+---
+import { experience, education, capabilities } from "../content/site";
+---
+
+<section class="section section--cream" id="experience" data-theme="cream">
+  <div class="shell">
+    <div class="experience__head" data-reveal>
+      <p class="eyebrow">Experience</p>
+      <h2 class="display-2 experience__title">A decade of building, designing, and writing.</h2>
+    </div>
+
+    <ul class="timeline experience__timeline">
+      {
+        experience.map((item) => (
+          <li data-reveal>
+            <div>
+              <p class="timeline__role">
+                {item.role}
+                <span class="timeline__org">{item.org}</span>
+              </p>
+            </div>
+            <p class="timeline__note">{item.note}</p>
+            <p class="timeline__dates">
+              {item.dates ?? (item.current ? "Present" : "")}
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="experience__education" data-reveal>
+      <h3 class="eyebrow">Education</h3>
+      {
+        education.map((item) => (
+          <div class="experience__degree">
+            <p class="timeline__role">
+              {item.qualification}
+              <span class="timeline__org">{item.org}</span>
+            </p>
+            <p class="timeline__dates">{item.dates}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="experience__capabilities" data-reveal>
+      <h3 class="eyebrow">Capabilities</h3>
+      <div class="capability-grid">
+        {
+          capabilities.map((item) => (
+            <div class="capability">
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .experience__head {
+    max-width: 40rem;
+  }
+
+  .experience__title {
+    margin-top: 1rem;
+  }
+
+  .experience__timeline {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .experience__timeline > :last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .experience__education {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .experience__degree {
+    display: grid;
+    gap: 0.35rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    margin-top: 1.25rem;
+  }
+
+  @media (min-width: 820px) {
+    .experience__degree {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 2.5rem;
+      align-items: baseline;
+    }
+  }
+
+  .experience__capabilities {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .experience__capabilities .capability-grid {
+    margin-top: 1.5rem;
+  }
+</style>

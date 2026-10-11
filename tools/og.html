@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>OG card</title>
+    <style>
+      @font-face {
+        font-family: "Geist";
+        font-weight: 300 700;
+        src: url("../public/fonts/geist-latin.woff2") format("woff2");
+      }
+
+      * {
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: #e20000;
+        color: #fff;
+        font-family: "Geist", Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        position: relative;
+      }
+
+      .copy {
+        position: absolute;
+        left: 64px;
+        bottom: 54px;
+        z-index: 2;
+        max-width: 620px;
+      }
+
+      .eyebrow {
+        font-size: 15px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.72);
+      }
+
+      h1 {
+        margin-top: 14px;
+        font-size: 66px;
+        font-weight: 400;
+        line-height: 1.02;
+        letter-spacing: -0.03em;
+      }
+
+      p {
+        margin-top: 20px;
+        font-size: 22px;
+        line-height: 1.42;
+        color: rgba(255, 255, 255, 0.9);
+        max-width: 34ch;
+      }
+
+      .brand {
+        position: absolute;
+        left: 64px;
+        top: 54px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        z-index: 3;
+      }
+
+      .brand img {
+        width: 44px;
+        height: auto;
+      }
+
+      .brand span {
+        font-size: 19px;
+        letter-spacing: 0.02em;
+      }
+
+      .portrait {
+        position: absolute;
+        right: 78px;
+        bottom: -34px;
+        width: 402px;
+        height: auto;
+        z-index: 1;
+        filter: drop-shadow(0 26px 50px rgba(20, 18, 17, 0.42));
+      }
+
+      .pass {
+        position: absolute;
+        right: 4px;
+        top: 54px;
+        width: 164px;
+        rotate: 5deg;
+        overflow: hidden;
+        border-radius: 5px;
+        box-shadow: 0 16px 34px -18px rgba(20, 18, 17, 0.6);
+        outline: 1px solid rgba(20, 18, 17, 0.1);
+        outline-offset: -1px;
+        z-index: 2;
+      }
+
+      .pass img {
+        width: 100%;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="brand">
+      <img src="../src/assets/tribe-icon.png" alt="" />
+      <span>Currently building Tribe</span>
+    </div>
+
+    <div class="pass">
+      <img src="../src/assets/book-mockup.webp" alt="" />
+    </div>
+
+    <img class="portrait" src="../src/assets/portrait-hero.webp" alt="" />
+
+    <div class="copy">
+      <p class="eyebrow">Emmanuel Cobbi</p>
+      <h1>Software developer,<br />designer, and author.</h1>
+      <p>Building Tribe. Writing at Bonteh Magazine. Author of Tales the Gods Keep.</p>
+    </div>
+  </body>
+</html>

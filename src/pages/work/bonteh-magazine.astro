@@ -1,0 +1,160 @@
+---
+import { Image } from "astro:assets";
+import Base from "../../layouts/Base.astro";
+import { assets } from "../../content/assets";
+import { articles, links } from "../../content/site";
+import ArticleRow from "../../components/ArticleRow.astro";
+---
+
+<Base
+  title="Bonteh Magazine — case study"
+  description="Emmanuel Cobbi works as CTO, software developer, and writer at Bonteh Magazine, shaping its digital platform and writing about business, technology, and policy."
+  path="/work/bonteh-magazine"
+  ogType="article"
+>
+  <section class="page-head" data-theme="cream">
+    <div class="shell">
+      <p class="eyebrow">Case study · Current role</p>
+      <h1 class="display-1 page-head__title">
+        Building the technology behind a business and policy publication.
+      </h1>
+      <dl class="case-meta">
+        <div>
+          <dt>Role</dt>
+          <dd>CTO, Software Developer & Writer</dd>
+        </div>
+        <div>
+          <dt>Publication</dt>
+          <dd>Bonteh Magazine</dd>
+        </div>
+        <div>
+          <dt>Site</dt>
+          <dd><a class="inline-link" href={links.bonteh} rel="noopener">bontehmagazine.com</a></dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section section--cream" style="padding-top:clamp(2rem,4vw,3rem)">
+    <div class="shell">
+      <figure class="case-figure" data-reveal>
+        <span class="media-frame">
+          <Image
+            src={assets.bontehWeb.src}
+            alt={assets.bontehWeb.alt}
+            widths={[720, 1080, 1440]}
+            sizes="(min-width: 1240px) 72rem, 92vw"
+            loading="eager"
+          />
+        </span>
+        <figcaption>
+          Screenshot of bontehmagazine.com, captured 11 October 2026. Two of my published
+          pieces appear in the homepage grid.
+        </figcaption>
+      </figure>
+
+      <div class="prose-block case-body">
+        <h2>The publication</h2>
+        <p>
+          Bonteh Magazine covers business, policy, politics, and technology with a focus on
+          how they land in Africa and in Cameroon specifically. It describes itself as the
+          publication you read before making important business and policy decisions, and
+          that is the standard its editorial work is held to.
+        </p>
+
+        <h2>My role</h2>
+        <p>
+          I work across two sides of the publication. On the technology side I serve as CTO
+          and software developer, contributing to the digital platform that carries the
+          reporting. On the editorial side I write — essays and reported pieces on
+          technology, business, and the systems shaping everyday life.
+        </p>
+        <p>
+          The two roles reinforce each other. Writing regularly about product and
+          distribution keeps me close to what readers actually ask for, and that shapes how
+          I think about the reading experience itself.
+        </p>
+
+        <h2>What I contributed</h2>
+        <p>
+          My work sits inside a wider team effort, and the platform is not a solo build.
+          What I can say concretely is this: I contribute to the publication's digital
+          platform, and I am one of the writers whose work appears on it. I would rather
+          describe that honestly than claim credit for the whole publication.
+        </p>
+      </div>
+
+      <h2 class="display-2 case-subhead">Selected writing</h2>
+      <div class="writing__list">
+        {articles.map((article) => <ArticleRow article={article} showSource={false} />)}
+      </div>
+
+      <div class="case-cta">
+        <h2 class="display-3">Read the publication.</h2>
+        <div class="actions mt-1">
+          <a class="pill pill--ink" href={links.bonteh} rel="noopener">Visit Bonteh Magazine</a>
+          <a class="pill pill--ghost" href="/writing">All published writing</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .case-meta {
+    display: grid;
+    gap: 1.5rem;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .case-meta div {
+    border-top: 1px solid rgba(17, 17, 17, 0.14);
+    padding-top: 0.9rem;
+  }
+
+  .case-meta dt {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+  }
+
+  .case-meta dd {
+    margin: 0.45rem 0 0;
+    font-size: 1rem;
+  }
+
+  .case-figure {
+    margin: 0 0 clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .case-figure figcaption {
+    margin-top: 0.85rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    max-width: 50ch;
+  }
+
+  .case-body {
+    max-width: 64ch;
+  }
+
+  .case-subhead {
+    margin-top: clamp(3rem, 6vw, 4rem);
+  }
+
+  .writing__list {
+    margin-top: 1.5rem;
+  }
+
+  .writing__list > :last-child {
+    border-bottom: 1px solid rgba(17, 17, 17, 0.14);
+  }
+
+  .case-cta {
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+    padding-top: 2rem;
+    border-top: 1px solid rgba(17, 17, 17, 0.14);
+  }
+</style>

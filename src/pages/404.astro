@@ -1,0 +1,59 @@
+---
+import Base from "../layouts/Base.astro";
+import { profile } from "../content/site";
+---
+
+<Base
+  title="Page not found"
+  description="That page does not exist. Head back to the homepage to see Emmanuel Cobbi's work."
+  path="/404"
+>
+  <section class="section section--red notfound" data-theme="red">
+    <div class="shell shell--narrow">
+      <p class="eyebrow">Error 404</p>
+      <h1 class="display-1 notfound__title">This page went looking for a better idea.</h1>
+      <p class="notfound__body">
+        The link you followed does not exist any more, or never did. No harm done —
+        everything worth seeing is one step back.
+      </p>
+      <div class="actions notfound__actions">
+        <a class="pill pill--light" href="/">Back to the homepage</a>
+        <a class="pill pill--ghost" href="/#contact">Get in touch</a>
+      </div>
+      <p class="notfound__meta">{profile.name} — {profile.role}</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .notfound {
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding-top: calc(var(--header-h) + 3rem);
+  }
+
+  .notfound__title {
+    margin-top: 1rem;
+    max-width: 20ch;
+  }
+
+  .notfound__body {
+    margin-top: 1.5rem;
+    max-width: 44ch;
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.86);
+  }
+
+  .notfound__actions {
+    margin-top: 2rem;
+  }
+
+  .notfound__meta {
+    margin-top: 3rem;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: rgba(255, 255, 255, 0.6);
+  }
+</style>

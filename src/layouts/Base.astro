@@ -1,0 +1,241 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { profile, seo, links, contact } from "../content/site";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Page path used for the canonical URL, e.g. "/work/tribe". */
+  path?: string;
+  /** "profile" for the homepage, "article-ish" elsewhere. */
+  ogType?: string;
+}
+
+const {
+  title = seo.defaultTitle,
+  description = seo.description,
+  path = Astro.url.pathname,
+  ogType = "website",
+} = Astro.props;
+
+const canonical = new URL(path, seo.siteUrl).href;
+const ogImage = new URL(seo.ogImage, seo.siteUrl).href;
+
+/**
+ * Person structured data. Only confirmed names, roles and links appear here.
+ * No ISBN, publisher or award data is invented for the book.
+ */
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: profile.name,
+  alternateName: profile.legalName,
+  jobTitle: "Software Developer, Author, and Founder of Tribe",
+  description: seo.description,
+  nationality: { "@type": "Country", name: "Cameroon" },
+  url: seo.siteUrl,
+  email: `mailto:${contact.email}`,
+  knowsAbout: [
+    "Software development",
+    "Product design",
+    "Artificial intelligence",
+    "Commerce and payments",
+    "Writing and essays",
+  ],
+  worksFor: [
+    { "@type": "Organization", name: "Tribe", url: links.tribe },
+    { "@type": "Organization", name: "Bonteh Magazine", url: links.bonteh },
+  ],
+  sameAs: [links.tribe, links.bonteh],
+};
+---
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#E20000" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <link
+      rel="preload"
+      href="/fonts/geist-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={profile.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${profile.name} — ${profile.role}`} />
+    <meta property="og:locale" content="en" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {
+      /* Private previews stay out of search results until a real public
+         domain is attached. Flip seo.indexable in src/content/site.ts. */
+      !seo.indexable && <meta name="robots" content="noindex, nofollow" />
+    }
+
+    <script is:inline>
+      document.documentElement.classList.remove("no-js");
+    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <!-- Kept inline and synchronous: this is the only script the page needs,
+         so there is no module request that could fail and strand content in
+         its pre-reveal state. -->
+    <script is:inline>
+      /* ---------------------------------------------------------------
+         Small progressive enhancements. Nothing here is required to read
+         the page; content is visible without JavaScript.
+         --------------------------------------------------------------- */
+
+      // 1. Sticky header adopts the foreground and surface of the section
+      //    currently sitting under it, so it stays legible on red, cream,
+      //    blue and dark backgrounds.
+      var header = document.querySelector("[data-site-header]");
+      var themedSections = Array.prototype.slice.call(
+        document.querySelectorAll("[data-theme]"),
+      );
+
+      if (header && themedSections.length) {
+        var headerStyles = {
+          red: { fg: "#ffffff", bg: "rgba(226, 0, 0, 0.92)" },
+          blue: { fg: "#ffffff", bg: "rgba(49, 89, 244, 0.92)" },
+          ink: { fg: "#F7F2EA", bg: "rgba(20, 18, 17, 0.9)" },
+          cream: { fg: "#141211", bg: "rgba(247, 242, 234, 0.92)" },
+          paper: { fg: "#141211", bg: "rgba(255, 253, 249, 0.92)" },
+        };
+
+        var frame = 0;
+        var sync = function () {
+          frame = 0;
+          var probe = header.offsetHeight * 0.55;
+          var active = "red";
+          for (var i = 0; i < themedSections.length; i += 1) {
+            var section = themedSections[i];
+            var rect = section.getBoundingClientRect();
+            if (rect.top <= probe && rect.bottom > probe) {
+              active = section.getAttribute("data-theme") || active;
+              break;
+            }
+          }
+          var palette = headerStyles[active] || headerStyles.red;
+          var scrolled = window.scrollY > 24;
+          document.documentElement.style.setProperty("--header-fg", palette.fg);
+          document.documentElement.style.setProperty(
+            "--header-bg",
+            scrolled ? palette.bg : "transparent",
+          );
+          document.documentElement.style.setProperty(
+            "--header-shadow",
+            scrolled ? "0 1px 0 rgba(20, 18, 17, 0.08)" : "none",
+          );
+        };
+        var request = function () {
+          if (!frame) frame = requestAnimationFrame(sync);
+        };
+
+        sync();
+        window.addEventListener("scroll", request, { passive: true });
+        window.addEventListener("resize", request, { passive: true });
+      }
+
+      // 2. Section reveals. Skipped entirely when motion is reduced.
+      var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var revealTargets = Array.prototype.slice.call(
+        document.querySelectorAll("[data-reveal]"),
+      );
+
+      if (reduceMotion || !("IntersectionObserver" in window)) {
+        revealTargets.forEach(function (el) {
+          el.setAttribute("data-revealed", "true");
+        });
+      } else {
+        var revealObserver = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              entry.target.setAttribute("data-revealed", "true");
+              revealObserver.unobserve(entry.target);
+            });
+          },
+          { rootMargin: "0px 0px -12% 0px", threshold: 0.08 },
+        );
+        revealTargets.forEach(function (el) {
+          revealObserver.observe(el);
+        });
+      }
+
+      // 3. Mobile menu.
+      var menu = document.querySelector("[data-mobile-menu]");
+      var toggle = document.querySelector("[data-menu-toggle]");
+
+      if (menu && toggle) {
+        var setOpen = function (open) {
+          menu.setAttribute("data-open", String(open));
+          toggle.setAttribute("aria-expanded", String(open));
+          document.body.setAttribute("data-menu-open", String(open));
+          if (open) {
+            // The panel transitions out of `visibility: hidden`, and a hidden
+            // element cannot take focus. Wait two frames: the first renders the
+            // newly visible state, the second can focus it.
+            requestAnimationFrame(function () {
+              requestAnimationFrame(function () {
+                var firstLink = menu.querySelector("a");
+                if (firstLink) firstLink.focus();
+              });
+            });
+          }
+        };
+
+        toggle.addEventListener("click", function () {
+          setOpen(menu.getAttribute("data-open") !== "true");
+        });
+        menu.querySelectorAll("a").forEach(function (link) {
+          link.addEventListener("click", function () {
+            setOpen(false);
+          });
+        });
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape" && menu.getAttribute("data-open") === "true") {
+            setOpen(false);
+            toggle.focus();
+          }
+        });
+      }
+
+      // 4. Keep the current year honest in the footer.
+      var year = document.querySelector("[data-year]");
+      if (year) year.textContent = String(new Date().getFullYear());
+    </script>
+  </body>
+</html>

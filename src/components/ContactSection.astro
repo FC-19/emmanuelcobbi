@@ -1,0 +1,54 @@
+---
+import { contactSection, contact, profile } from "../content/site";
+---
+
+<section class="section section--red" id="contact" data-theme="red">
+  <div class="shell contact-grid">
+    <div data-reveal>
+      <p class="eyebrow">{contactSection.eyebrow}</p>
+      <h2 class="display-1 contact__title">{contactSection.title}</h2>
+      <p class="contact__body">{contactSection.body}</p>
+      <div class="actions contact__actions">
+        <a class="pill pill--light" href={contactSection.primary.href} rel="noopener">
+          {contactSection.primary.label}
+        </a>
+        <a class="pill pill--ghost" href={contactSection.secondary.href}>
+          {contactSection.secondary.label}
+        </a>
+      </div>
+    </div>
+
+    <ul class="contact-list" data-reveal style="--reveal-delay:0.1s">
+      <li>
+        <span>WhatsApp</span>
+        <a href={contact.whatsapp} rel="noopener">{contact.phoneDisplay}</a>
+      </li>
+      <li>
+        <span>Email</span>
+        <a href={`mailto:${contact.email}`}>{contact.email}</a>
+      </li>
+      <li>
+        <span>Based</span>
+        <p>{profile.location}</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .contact__title {
+    margin-top: 1rem;
+    max-width: 18ch;
+  }
+
+  .contact__body {
+    margin-top: 1.25rem;
+    font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+    color: rgba(255, 255, 255, 0.86);
+    max-width: 32ch;
+  }
+
+  .contact__actions {
+    margin-top: 2rem;
+  }
+</style>

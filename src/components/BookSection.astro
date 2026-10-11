@@ -1,0 +1,77 @@
+---
+import { Image } from "astro:assets";
+import { assets } from "../content/assets";
+import { book } from "../content/site";
+---
+
+<section class="section section--blue" id="book" data-theme="blue">
+  <div class="shell book-feature">
+    <div class="book-feature__art" data-reveal>
+      <Image
+        src={assets.bookMockup.src}
+        alt={assets.bookMockup.alt}
+        widths={[320, 480, 720]}
+        sizes="(min-width: 900px) 23rem, 70vw"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="book-feature__text" data-reveal style="--reveal-delay:0.1s">
+      <p class="eyebrow">{book.eyebrow}</p>
+      <h2 class="display-2 book-feature__title">
+        {book.title.split("\n").map((line) => <span class="book-feature__line">{line}</span>)}
+      </h2>
+      <p class="book-feature__name">{book.name}</p>
+      <p class="book-feature__subtitle">{book.subtitle}</p>
+      <p class="book-feature__body">{book.description}</p>
+      <div class="actions book-feature__actions">
+        <a class="pill pill--light" href={book.cta.href} rel="noopener">{book.cta.label}</a>
+      </div>
+      <p class="book-feature__note">{book.note}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .book-feature__line {
+    display: block;
+  }
+
+  .book-feature__title {
+    margin-top: 1rem;
+  }
+
+  .book-feature__name {
+    margin-top: 2rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 2.6vw, 1.85rem);
+    letter-spacing: -0.02em;
+    color: var(--yellow);
+  }
+
+  .book-feature__subtitle {
+    margin-top: 0.4rem;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.72);
+    max-width: 42ch;
+  }
+
+  .book-feature__body {
+    margin-top: 1.5rem;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.86);
+    max-width: 46ch;
+  }
+
+  .book-feature__actions {
+    margin-top: 1.85rem;
+  }
+
+  .book-feature__note {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    max-width: 44ch;
+  }
+</style>

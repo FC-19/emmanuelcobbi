@@ -1,0 +1,226 @@
+---
+import { Image } from "astro:assets";
+import Base from "../../layouts/Base.astro";
+import { assets } from "../../content/assets";
+import { tribe, links, profile } from "../../content/site";
+---
+
+<Base
+  title="Tribe — case study"
+  description="Inside Tribe: an AI-powered platform bringing business tools, commerce, and payments into one connected experience, with Tia on WhatsApp and the web."
+  path="/work/tribe"
+  ogType="article"
+>
+  <section class="page-head" data-theme="cream">
+    <div class="shell">
+      <p class="eyebrow">Case study · Currently building</p>
+      <h1 class="display-1 page-head__title">
+        Tribe helps people run business with less friction.
+      </h1>
+      <p class="page-head__lede">{tribe.description}</p>
+      <dl class="case-meta">
+        <div>
+          <dt>Role</dt>
+          <dd>{tribe.role}</dd>
+        </div>
+        <div>
+          <dt>Status</dt>
+          <dd>Live, in active development</dd>
+        </div>
+        <div>
+          <dt>Site</dt>
+          <dd><a class="inline-link" href={links.tribe} rel="noopener">usetribeapp.com</a></dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section section--cream" style="padding-top:clamp(2rem,4vw,3rem)">
+    <div class="shell">
+      <figure class="case-figure" data-reveal>
+        <span class="media-frame">
+          <Image
+            src={assets.tribeWeb.src}
+            alt={assets.tribeWeb.alt}
+            widths={[720, 1080, 1440]}
+            sizes="(min-width: 1240px) 72rem, 92vw"
+            loading="eager"
+          />
+        </span>
+        <figcaption>Screenshot of usetribeapp.com, captured 11 October 2026.</figcaption>
+      </figure>
+
+      <div class="prose-block case-body">
+        <h2>The problem</h2>
+        <p>
+          Running a small business usually means running several disconnected systems at
+          once. Payments arrive in one place, customer questions land in a chat, the stock
+          count lives in a notebook, and the record of who still owes money lives in
+          someone's head. Nothing is broken on its own, but the owner spends the day
+          stitching it together.
+        </p>
+
+        <h2>What Tribe is</h2>
+        <p>
+          Tribe brings those pieces into one connected experience. Products and services,
+          inventory, orders, payment links, invoices, receipts, and customer follow-ups sit
+          together, so the state of the business is visible in one place instead of five.
+        </p>
+        <p>
+          Tia is the assistant layer on top. Instead of navigating menus, you ask: what
+          needs my attention today? Tia can explain recorded activity, prepare documents
+          and messages, set up reminders, and move a task along. It works on WhatsApp and
+          on the web, so the conversation is available where the business already happens.
+        </p>
+        <p>
+          Alongside the business tools, Tribe covers everyday money — bills, reminders, and
+          payments — and adds marketplace mechanics such as escrow-protected orders, where
+          payment is released once delivery is confirmed. Affiliates can opt in to promote
+          eligible products and earn commission on qualifying sales.
+        </p>
+
+        <h2>My role</h2>
+        <p>
+          I am Tribe's founder and software developer. That covers the shape of the product
+          — what it does, what it deliberately does not do yet — as well as the design and
+          implementation work behind the interfaces people use.
+        </p>
+
+        <h2>Where it is going</h2>
+        <p>{tribe.vision}</p>
+      </div>
+
+      <ul class="value-list case-values">
+        {
+          tribe.values.map((value) => (
+            <li class="value case-value">
+              <h3>{value.title}</h3>
+              <p>{value.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="case-media">
+        <figure data-reveal>
+          <span class="media-frame tilt" style="--rot:1.5deg">
+            <Image
+              src={assets.tribeAppDesign.src}
+              alt={assets.tribeAppDesign.alt}
+              widths={[360, 540, 720]}
+              sizes="(min-width: 900px) 20rem, 60vw"
+              loading="lazy"
+            />
+          </span>
+          <figcaption>
+            Tribe app interface design. Product design work with placeholder figures — not a
+            screenshot of a live build.
+          </figcaption>
+        </figure>
+        <figure data-reveal style="--reveal-delay:0.1s">
+          <span class="media-frame tilt" style="--rot:-1.5deg">
+            <Image
+              src={assets.eventBanner.src}
+              alt={assets.eventBanner.alt}
+              widths={[420, 640]}
+              sizes="(min-width: 900px) 22rem, 70vw"
+              loading="lazy"
+            />
+          </span>
+          <figcaption>
+            Showing Tribe at an exhibition — where most of the useful product feedback comes
+            from.
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="case-cta">
+        <h2 class="display-3">Try it, or ask me about it.</h2>
+        <div class="actions mt-1">
+          <a class="pill pill--ink" href={links.tribe} rel="noopener">Visit Tribe</a>
+          <a class="pill pill--ghost" href="/#contact">Talk to {profile.name.split(" ")[0]}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .case-meta {
+    display: grid;
+    gap: 1.5rem;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .case-meta div {
+    border-top: 1px solid rgba(17, 17, 17, 0.14);
+    padding-top: 0.9rem;
+  }
+
+  .case-meta dt {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+  }
+
+  .case-meta dd {
+    margin: 0.45rem 0 0;
+    font-size: 1rem;
+  }
+
+  .case-figure {
+    margin: 0 0 clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .case-figure figcaption,
+  .case-media figcaption {
+    margin-top: 0.85rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    max-width: 46ch;
+  }
+
+  .case-body {
+    max-width: 64ch;
+  }
+
+  .case-values {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    border-top: 1px solid rgba(17, 17, 17, 0.14);
+    padding-top: 1.5rem;
+  }
+
+  .case-value h3 {
+    color: var(--ink);
+  }
+
+  .case-value p {
+    color: rgba(20, 18, 17, 0.74);
+  }
+
+  .case-value {
+    border-top: 0;
+  }
+
+  .case-media {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: flex-start;
+  }
+
+  .case-media figure {
+    margin: 0;
+    flex: 1 1 18rem;
+    max-width: 24rem;
+  }
+
+  .case-cta {
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+    padding-top: 2rem;
+    border-top: 1px solid rgba(17, 17, 17, 0.14);
+  }
+</style>

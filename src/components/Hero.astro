@@ -1,0 +1,165 @@
+---
+import { Image } from "astro:assets";
+import { assets } from "../content/assets";
+import { hero, profile } from "../content/site";
+---
+
+<section class="hero" id="top" data-theme="red">
+  <div class="hero__floats">
+    <figure class="float float--book">
+      <span class="float__frame" style="--rot:-7deg;--bob-duration:11s">
+        <Image
+          src={assets.bookMockup.src}
+          alt={assets.bookMockup.alt}
+          widths={[180, 280, 360]}
+          sizes="(min-width: 1280px) 152px, (min-width: 1024px) 128px, 1px"
+          loading="eager"
+        />
+      </span>
+    </figure>
+
+    <figure class="float float--talk">
+      <span class="float__frame" style="--rot:4deg;--bob-duration:13s;--bob-delay:-3s">
+        <Image
+          src={assets.eventTalkWide.src}
+          alt={assets.eventTalkWide.alt}
+          widths={[260, 400, 520]}
+          sizes="(min-width: 1024px) 208px, 1px"
+          loading="lazy"
+        />
+      </span>
+    </figure>
+
+    <figure class="float float--tribe">
+      <span class="float__frame" style="--rot:4deg;--bob-duration:12s;--bob-delay:-6s">
+        <Image
+          src={assets.tribeWeb.src}
+          alt={assets.tribeWeb.alt}
+          widths={[330, 500, 660]}
+          sizes="(min-width: 1280px) 272px, (min-width: 1024px) 224px, 1px"
+          loading="eager"
+        />
+      </span>
+    </figure>
+
+    <figure class="float float--banner">
+      <span class="float__frame" style="--rot:-5deg;--bob-duration:10s;--bob-delay:-8s">
+        <Image
+          src={assets.eventBanner.src}
+          alt={assets.eventBanner.alt}
+          widths={[180, 280, 360]}
+          sizes="(min-width: 1024px) 136px, 120px"
+          loading="lazy"
+        />
+      </span>
+    </figure>
+  </div>
+
+  <div class="shell hero__inner">
+    <div class="hero__copy">
+      <p class="eyebrow">{hero.eyebrow}</p>
+      <h1 class="hero-title hero__title">
+        {hero.titleLines.map((line) => <span>{line}</span>)}
+      </h1>
+      <p class="hero__lede">{hero.lede}</p>
+      <div class="actions hero__actions">
+        <a class="pill pill--light" href={hero.primary.href}>{hero.primary.label}</a>
+        <a class="pill pill--ghost" href={hero.secondary.href}>{hero.secondary.label}</a>
+      </div>
+      <p class="hero__status">
+        <Image
+          src={assets.tribeIcon.src}
+          alt=""
+          widths={[44, 88]}
+          sizes="22px"
+          aria-hidden="true"
+        />
+        <span>{hero.status}</span>
+      </p>
+    </div>
+
+    <div class="hero__figure">
+      <p class="hero__portrait-caption">{profile.name} — {profile.location}</p>
+      <Image
+        class="hero__portrait"
+        src={assets.portraitHero.src}
+        alt={assets.portraitHero.alt}
+        widths={[420, 640, 900, 1086]}
+        sizes="(min-width: 1024px) 27rem, (min-width: 640px) 24rem, 82vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Frames bleed off the outer edges and sit in the bands the reading column
+     leaves free: above the eyebrow, below the status line, and past the
+     portrait on the right. */
+  .float--book {
+    top: 4%;
+    left: -3%;
+    width: 9.5rem;
+  }
+
+  .float--tribe {
+    top: 11%;
+    right: -6%;
+    width: 17rem;
+  }
+
+  .float--talk {
+    bottom: -2%;
+    left: -1%;
+    width: 13rem;
+  }
+
+  .float--banner {
+    bottom: 3%;
+    right: 1%;
+    width: 8.5rem;
+  }
+
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .float--tribe {
+      width: 14rem;
+      right: -9%;
+    }
+
+    .float--book {
+      width: 8rem;
+    }
+  }
+
+  /* On a short viewport the lower band disappears so nothing crowds the
+     buttons or the status line. */
+  @media (min-width: 1024px) and (max-height: 780px) {
+    .float--talk {
+      display: none;
+    }
+  }
+
+  /* Below the desktop breakpoint the frames would crowd the reading column,
+     so only two remain and they sit in the top and bottom bands. */
+  @media (max-width: 1023px) {
+    .float--book,
+    .float--talk,
+    .float--tribe {
+      display: none;
+    }
+
+    .float--banner {
+      bottom: 1.5rem;
+      right: 0.75rem;
+      width: 7.5rem;
+      opacity: 0.5;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .float--banner {
+      display: none;
+    }
+  }
+</style>

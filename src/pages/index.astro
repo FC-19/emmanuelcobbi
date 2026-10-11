@@ -1,0 +1,23 @@
+---
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import AboutSection from "../components/AboutSection.astro";
+import TribeSection from "../components/TribeSection.astro";
+import WorkSection from "../components/WorkSection.astro";
+import WritingSection from "../components/WritingSection.astro";
+import BookSection from "../components/BookSection.astro";
+import ExperienceSection from "../components/ExperienceSection.astro";
+import ContactSection from "../components/ContactSection.astro";
+import { seo } from "../content/site";
+---
+
+<Base title={seo.defaultTitle} description={seo.description} path="/">
+  <Hero />
+  <AboutSection />
+  <TribeSection />
+  <WorkSection />
+  <WritingSection />
+  <BookSection />
+  <ExperienceSection />
+  <ContactSection />
+</Base>

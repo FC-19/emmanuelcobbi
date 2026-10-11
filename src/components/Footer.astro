@@ -1,0 +1,55 @@
+---
+import { profile, contact, links, nav } from "../content/site";
+---
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="site-footer__top">
+      <div>
+        <p class="site-footer__name">{profile.name}</p>
+        <p class="site-footer__blurb">
+          Software developer, designer, and author. Building Tribe, writing at
+          Bonteh Magazine, and working on stories about money, systems, and power.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <div>
+          <h2>Explore</h2>
+          <ul>
+            {
+              nav.map((item) => (
+                <li>
+                  <a href={item.href}>{item.label}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div>
+          <h2>Elsewhere</h2>
+          <ul>
+            <li><a href={links.tribe} rel="noopener">Tribe</a></li>
+            <li><a href={links.bonteh} rel="noopener">Bonteh Magazine</a></li>
+            <li><a href="/writing">Published writing</a></li>
+            <li><a href="/about">Profile</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Contact</h2>
+          <ul>
+            <li><a href={contact.whatsapp} rel="noopener">WhatsApp</a></li>
+            <li><a href={`mailto:${contact.email}`}>Email</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-footer__base">
+      <span
+        >© <span data-year>2026</span> {profile.name}. All rights reserved.</span
+      >
+      <span>Built as a static site. No trackers, no cookies.</span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,113 @@
+---
+import { Image } from "astro:assets";
+import { assets } from "../content/assets";
+import { about } from "../content/site";
+---
+
+<section class="section section--cream" id="about" data-theme="cream">
+  <div class="shell about">
+    <div class="about__text" data-reveal>
+      <p class="eyebrow">{about.eyebrow}</p>
+      <h2 class="display-2 about__title">{about.title}</h2>
+      <div class="prose about__body">
+        {about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+    </div>
+
+    <div class="about__aside" data-reveal style="--reveal-delay:0.1s">
+      <div class="about__portrait">
+        <Image
+          src={assets.portraitAbout.src}
+          alt={assets.portraitAbout.alt}
+          widths={[320, 480, 640]}
+          sizes="(min-width: 960px) 20rem, 60vw"
+          loading="lazy"
+        />
+      </div>
+      <ul class="about__disciplines">
+        {
+          about.disciplines.map((item) => (
+            <li>{item}</li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="stat-row about__facts" data-reveal style="--reveal-delay:0.15s">
+      {
+        about.facts.map((fact) => (
+          <div class="stat">
+            <p class="stat__label">{fact.label}</p>
+            <p class="stat__value">{fact.value}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  @media (min-width: 960px) {
+    .about {
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+      align-items: start;
+    }
+
+    .about__text {
+      max-width: 40rem;
+    }
+
+    .about__aside {
+      justify-self: end;
+      width: min(100%, 20rem);
+    }
+
+    .about__facts {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .about__title {
+    margin-top: 1.1rem;
+    max-width: 22ch;
+  }
+
+  .about__body {
+    margin-top: 1.75rem;
+  }
+
+  .about__portrait {
+    rotate: 1.6deg;
+    border-radius: 8px;
+    overflow: hidden;
+    outline: 1px solid rgba(17, 17, 17, 0.08);
+    outline-offset: -1px;
+  }
+
+  .about__portrait img {
+    width: 100%;
+    height: auto;
+  }
+
+  .about__disciplines {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 1.25rem 0 0;
+    padding: 0;
+  }
+
+  .about__disciplines li {
+    border: 1px solid rgba(17, 17, 17, 0.16);
+    border-radius: 9999px;
+    padding: 0.32rem 0.8rem;
+    font-size: 0.76rem;
+    letter-spacing: 0.02em;
+  }
+</style>

@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+*.log
+_shots/
+_probe*.mjs
+_served.html
