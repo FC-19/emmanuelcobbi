@@ -9,7 +9,7 @@ import sitemap from "@astrojs/sitemap";
 //
 // The noindex meta tag is driven by the matching value in
 // src/content/site.ts -> seo, so keep the two in step.
-const siteUrl = process.env.PUBLIC_SITE_URL ?? "https://emmanuelcobbi.xyz";
+const siteUrl = process.env.PUBLIC_SITE_URL ?? "https://www.emmanuelcobbi.xyz";
 const indexable = process.env.PUBLIC_SITE_INDEXABLE !== "false";
 
 export default defineConfig({

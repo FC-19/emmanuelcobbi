@@ -318,8 +318,11 @@ export const nav = [
 ] as const;
 
 export const seo = {
-  /** The live public origin. Kept in one place so it is easy to change. */
-  siteUrl: "https://emmanuelcobbi.xyz",
+  /**
+   * The live public origin. Vercel serves the site on the www host and
+   * 308-redirects the bare apex to it, so the canonical URL has to match www.
+   */
+  siteUrl: "https://www.emmanuelcobbi.xyz",
   titleTemplate: "%s — Emmanuel Cobbi",
   defaultTitle: "Emmanuel Cobbi — Software Developer, Author & Founder of Tribe",
   description:
