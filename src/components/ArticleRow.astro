@@ -12,8 +12,8 @@ const { article, headingLevel = "h3", showSource = true } = Astro.props;
 const Heading = headingLevel;
 ---
 
-<a class="article-row" href={article.url} rel="noopener">
-  <time class="article-row__date" datetime={article.published}>{article.publishedDisplay}</time>
+<a class="article-row" href={article.href} rel="noopener">
+  <time class="article-row__date">{article.date}</time>
   <div class="article-row__main">
     <Heading class="article-row__title">{article.title}</Heading>
     <p class="article-row__summary">{article.summary}</p>

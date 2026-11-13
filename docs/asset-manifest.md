@@ -133,10 +133,10 @@ layout degrades into a finished design rather than showing a placeholder.
 
 | Item | Status | How the site handles it |
 | --- | --- | --- |
-| Confirmed book purchase link | Not supplied | "Ask about the book" opens WhatsApp with a prefilled message. No shop, checkout or preorder flow is invented. |
-| Tribe product screenshots beyond the live site | Not supplied | The live site capture plus one labelled interface design are used. No fake dashboards. |
+| Confirmed book purchase link | Confirmed | The Selar product page is linked from the book section. |
+| Tribe and Bonteh screens | Supplied and captured | Live desktop and mobile captures are paired with the supplied Tribe product-design screens. |
 | Bonteh Magazine architecture details | Not confirmed | The case study describes the role and refuses to claim credit for the whole platform. |
-| Personal social handles | Not confirmed | Omitted entirely. Tribe's official site publishes no Facebook, X or Instagram link, so no Tribe social links are rendered either. |
+| Personal social handles | Confirmed | Facebook, X, Instagram, LinkedIn, WhatsApp channel, Medium and GitHub are linked. |
 | Downloadable public CV PDF | Not available | `/about` carries a readable professional profile; the CV is offered on request with contact details deliberately excluded from this site. |
 | `hopeforallcultures.org`, `ciase.se` | Domains no longer resolve | Listed as past work with no link. |
 | Affiliate Lifestyle, PDV Leadex | Client sites no longer online | Named without links. |

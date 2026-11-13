@@ -16,7 +16,7 @@ const ROUTES = [
   "/",
   "/about",
   "/writing",
-  "/work/tribe",
+  "/work/triber",
   "/work/bonteh-magazine",
   "/404",
 ];

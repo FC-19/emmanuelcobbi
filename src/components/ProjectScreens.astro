@@ -1,0 +1,652 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+type Screen = {
+  src: ImageMetadata;
+  alt: string;
+  label: string;
+  detail: string;
+  kind: "web" | "mobile";
+};
+
+interface Props {
+  project: string;
+  eyebrow: string;
+  title: string;
+  intro: string;
+  url: string;
+  theme?: "ink" | "cream";
+  feature: Screen;
+  screens: Screen[];
+}
+
+const {
+  project,
+  eyebrow,
+  title,
+  intro,
+  url,
+  theme = "ink",
+  feature,
+  screens,
+} = Astro.props;
+const slug = project.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+---
+
+<section
+  class:list={["section", "screen-section", `section--${theme}`]}
+  id={`${slug}-screens`}
+  data-theme={theme}
+  data-project-screens
+>
+  <div class="shell">
+    <div class="screen-head" data-reveal>
+      <div>
+        <p class="eyebrow">{eyebrow}</p>
+        <h2 class="display-2 screen-title">{title}</h2>
+      </div>
+      <p class="screen-intro">{intro}</p>
+    </div>
+
+    <figure class="browser-stage" data-screen-stage data-reveal style="--reveal-delay:0.08s">
+      <span class="screen-stage__aura" aria-hidden="true"></span>
+      <div class="browser-frame">
+        <div class="browser-bar" aria-hidden="true">
+          <span class="browser-dots"><i></i><i></i><i></i></span>
+          <span class="browser-url">{url}</span>
+          <span class="browser-live"><i></i> Live</span>
+        </div>
+        <button
+          type="button"
+          class="screen-open"
+          data-screen-open
+          data-src={feature.src.src}
+          data-alt={feature.alt}
+          data-label={feature.label}
+          aria-label={`Enlarge ${feature.label}`}
+        >
+          <Image
+            src={feature.src}
+            alt={feature.alt}
+            widths={[720, 1080, 1440]}
+            sizes="(min-width: 1240px) 76rem, 94vw"
+            loading="lazy"
+          />
+        </button>
+      </div>
+      <figcaption>
+        <span>{feature.label}</span>
+        <span>{feature.detail}</span>
+      </figcaption>
+    </figure>
+
+    <div class="screen-gallery-head" data-reveal>
+      <h3 class="eyebrow">Mobile &amp; product views</h3>
+      <p>Drag, swipe or use the arrow keys. Tap any screen to open it.</p>
+    </div>
+
+    <div class="screen-rail-tools">
+      <div class="screen-rail-meter" aria-hidden="true">
+        <i data-rail-progress></i>
+      </div>
+      <div class="screen-rail-actions">
+        <button
+          type="button"
+          data-rail-prev
+          aria-controls={`${slug}-rail`}
+          aria-label={`Previous ${project} screen`}
+        >
+          ←
+        </button>
+        <button
+          type="button"
+          data-rail-next
+          aria-controls={`${slug}-rail`}
+          aria-label={`Next ${project} screen`}
+        >
+          →
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="phone-rail"
+      id={`${slug}-rail`}
+      data-phone-rail
+      tabindex="0"
+      aria-label={`${project} screen gallery`}
+    >
+      {
+        screens.map((screen, index) => (
+          <figure
+            class:list={["phone-card", screen.kind === "web" && "phone-card--web"]}
+            style={`--i:${index}`}
+            data-reveal
+          >
+            <button
+              type="button"
+              class="phone-frame"
+              data-screen-open
+              data-src={screen.src.src}
+              data-alt={screen.alt}
+              data-label={screen.label}
+              aria-label={`Enlarge ${screen.label}`}
+            >
+              <span class="phone-notch" aria-hidden="true"></span>
+              <span class="phone-frame__shine" aria-hidden="true"></span>
+              <Image
+                src={screen.src}
+                alt={screen.alt}
+                widths={[190, 260, 380, 520]}
+                sizes="(min-width: 900px) 13rem, 46vw"
+                loading="lazy"
+              />
+            </button>
+            <figcaption>
+              <strong>{screen.label}</strong>
+              <span>{screen.detail}</span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+
+  <dialog class="screen-dialog" data-screen-dialog aria-labelledby={`${slug}-dialog-title`}>
+    <div class="screen-dialog__bar">
+      <p id={`${slug}-dialog-title`} data-screen-dialog-title>Project screen</p>
+      <button type="button" data-screen-close aria-label="Close enlarged screen">Close ×</button>
+    </div>
+    <img data-screen-dialog-image src="" alt="" />
+  </dialog>
+</section>
+
+<style>
+  .screen-section {
+    overflow: hidden;
+  }
+
+  .screen-head {
+    display: grid;
+    gap: 1.2rem 4rem;
+    align-items: end;
+  }
+
+  @media (min-width: 900px) {
+    .screen-head {
+      grid-template-columns: minmax(0, 1fr) minmax(16rem, 24rem);
+    }
+  }
+
+  .screen-title {
+    margin-top: 1rem;
+    max-width: 13ch;
+  }
+
+  .screen-intro {
+    max-width: 35ch;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .browser-stage {
+    --stage-rx: 0deg;
+    --stage-ry: 0deg;
+    --stage-lift: 0px;
+    margin: clamp(2.5rem, 5vw, 4.5rem) 0 0;
+    position: relative;
+    isolation: isolate;
+    perspective: 1400px;
+  }
+
+  .browser-stage::before {
+    content: "";
+    position: absolute;
+    inset: 10% -8% -8%;
+    z-index: -1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.14), transparent 68%);
+    filter: blur(40px);
+  }
+
+  .screen-stage__aura {
+    position: absolute;
+    inset: -12% -10%;
+    z-index: -1;
+    overflow: hidden;
+    opacity: 0.2;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse at center, #000 10%, transparent 70%);
+  }
+
+  .screen-stage__aura::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(80vw, 54rem);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: repeating-conic-gradient(
+      from 0deg,
+      currentColor 0 0.6deg,
+      transparent 0.6deg 13deg
+    );
+    animation: stage-spin 28s linear infinite;
+  }
+
+  .browser-frame {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: clamp(12px, 1.4vw, 20px);
+    background: #0b0b0c;
+    box-shadow: 0 34px 90px -45px rgba(0, 0, 0, 0.85);
+    transform: rotateX(var(--stage-rx)) rotateY(var(--stage-ry)) translateY(var(--stage-lift));
+    transition:
+      transform 0.45s var(--ease),
+      box-shadow 0.45s var(--ease);
+    will-change: transform;
+  }
+
+  .browser-frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background: linear-gradient(
+      105deg,
+      transparent 33%,
+      rgba(255, 255, 255, 0.14) 48%,
+      transparent 61%
+    );
+    background-size: 240% 100%;
+    animation: frame-glint 9s ease-in-out infinite;
+  }
+
+  .browser-bar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1rem;
+    min-height: 2.65rem;
+    padding-inline: 0.9rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: #151517;
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.04em;
+  }
+
+  .browser-dots {
+    display: flex;
+    gap: 0.32rem;
+  }
+
+  .browser-dots i {
+    width: 0.48rem;
+    height: 0.48rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .browser-dots i:first-child {
+    background: var(--red);
+  }
+
+  .browser-url {
+    width: min(100%, 24rem);
+    justify-self: center;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    padding: 0.3rem 0.8rem;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: rgba(255, 255, 255, 0.58);
+    background: rgba(255, 255, 255, 0.035);
+  }
+
+  .browser-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #8fe1b3;
+  }
+
+  .browser-live i {
+    width: 0.36rem;
+    height: 0.36rem;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 0 0 rgba(143, 225, 179, 0.5);
+    animation: live-pulse 2.2s ease-out infinite;
+  }
+
+  .screen-open {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: #ece9e1;
+    cursor: zoom-in;
+  }
+
+  .screen-open img {
+    width: 100%;
+    height: auto;
+    transition: transform 1s var(--ease);
+  }
+
+  .screen-open:hover img {
+    transform: scale(1.012);
+  }
+
+  .browser-stage figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.5rem;
+    justify-content: space-between;
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .browser-stage figcaption span:first-child {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .screen-gallery-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.7rem 2rem;
+    margin-top: clamp(3rem, 6vw, 5rem);
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .screen-gallery-head p {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.04em;
+    color: var(--faint);
+  }
+
+  .screen-rail-tools {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .screen-rail-meter {
+    position: relative;
+    flex: 1;
+    height: 1px;
+    overflow: hidden;
+    background: var(--line);
+  }
+
+  .screen-rail-meter i {
+    display: block;
+    width: var(--rail-progress, 0%);
+    height: 100%;
+    background: currentColor;
+    transition: width 0.2s linear;
+  }
+
+  .screen-rail-actions {
+    display: flex;
+    gap: 0.45rem;
+  }
+
+  .screen-rail-actions button {
+    display: grid;
+    width: 2.65rem;
+    aspect-ratio: 1;
+    place-items: center;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    transition:
+      transform 0.3s var(--ease),
+      background-color 0.3s var(--ease);
+  }
+
+  .screen-rail-actions button:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  :global(.no-js) .screen-rail-tools {
+    display: none;
+  }
+
+  .phone-rail {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(44vw, 13rem);
+    gap: clamp(1rem, 2vw, 1.6rem);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    scroll-padding-inline: 0.2rem;
+    margin-top: 1.5rem;
+    padding: 1.2rem 0.2rem 2.2rem;
+  }
+
+  .phone-rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  .phone-card {
+    margin: 0;
+    scroll-snap-align: start;
+    transform: translateY(calc((var(--i) % 2) * 1.15rem));
+  }
+
+  .phone-frame {
+    position: relative;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.17);
+    border-radius: clamp(24px, 3vw, 38px);
+    background: #0b0b0c;
+    padding: clamp(5px, 0.7vw, 8px);
+    cursor: zoom-in;
+    box-shadow:
+      0 26px 55px -28px rgba(0, 0, 0, 0.9),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
+  }
+
+  .phone-frame__shine {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(-80%);
+    background: linear-gradient(
+      108deg,
+      transparent 38%,
+      rgba(255, 255, 255, 0.32) 50%,
+      transparent 62%
+    );
+    transition:
+      transform 0.85s var(--ease),
+      opacity 0.25s ease;
+  }
+
+  .phone-card:hover .phone-frame__shine,
+  .phone-card:focus-within .phone-frame__shine {
+    opacity: 1;
+    transform: translateX(80%);
+  }
+
+  .phone-card:hover .phone-frame {
+    transform: translateY(-8px) rotate(-0.8deg);
+    box-shadow:
+      0 38px 72px -28px rgba(0, 0, 0, 0.92),
+      0 0 0 1px rgba(255, 255, 255, 0.16);
+  }
+
+  .phone-frame img {
+    width: 100%;
+    height: auto;
+    max-height: 27rem;
+    border-radius: clamp(19px, 2.5vw, 31px);
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .phone-notch {
+    position: absolute;
+    z-index: 2;
+    top: 0.62rem;
+    left: 50%;
+    width: 32%;
+    height: 0.72rem;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: #0b0b0c;
+  }
+
+  .phone-card figcaption {
+    display: grid;
+    gap: 0.18rem;
+    margin-top: 0.85rem;
+  }
+
+  .phone-card strong {
+    font-size: 0.86rem;
+    font-weight: 500;
+    color: var(--white);
+  }
+
+  .phone-card figcaption span {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.04em;
+    color: var(--faint);
+  }
+
+  .screen-dialog {
+    width: min(92vw, 80rem);
+    max-height: 92vh;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-lg);
+    background: #0b0b0c;
+    color: var(--white);
+    box-shadow: 0 40px 120px rgba(0, 0, 0, 0.7);
+  }
+
+  .screen-dialog::backdrop {
+    background: rgba(4, 4, 5, 0.82);
+    backdrop-filter: blur(12px);
+  }
+
+  .screen-dialog__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .screen-dialog__bar button {
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: transparent;
+    padding: 0.3rem 0.75rem;
+    cursor: pointer;
+  }
+
+  .screen-dialog > img {
+    display: block;
+    max-width: 100%;
+    max-height: calc(92vh - 4rem);
+    width: auto;
+    margin: auto;
+    object-fit: contain;
+  }
+
+  @keyframes live-pulse {
+    60% {
+      box-shadow: 0 0 0 7px rgba(143, 225, 179, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(143, 225, 179, 0);
+    }
+  }
+
+  @keyframes stage-spin {
+    to {
+      transform: translate(-50%, -50%) rotate(1turn);
+    }
+  }
+
+  @keyframes frame-glint {
+    0%,
+    58% {
+      background-position: 130% 0;
+    }
+    78%,
+    100% {
+      background-position: -130% 0;
+    }
+  }
+
+  @media (min-width: 760px) {
+    .phone-rail {
+      grid-auto-columns: min(22vw, 14rem);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .browser-bar {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .browser-live {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .browser-live i,
+    .browser-frame::after,
+    .screen-stage__aura::before,
+    .phone-card:hover .phone-frame,
+    .phone-card:hover .phone-frame__shine,
+    .screen-open:hover img {
+      animation: none;
+      transform: none;
+    }
+
+    .browser-frame {
+      transform: none;
+    }
+  }
+</style>

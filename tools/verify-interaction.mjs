@@ -59,6 +59,7 @@ const browser = await puppeteer.launch({ executablePath: CHROME, headless: "new"
   const page = await browser.newPage();
   await page.setViewport({ width: 375, height: 812 });
   await page.goto(`${ORIGIN}/`, { waitUntil: "networkidle2" });
+  await page.waitForSelector('[data-intro][data-done="true"]', { timeout: 3000 });
 
   // First Tab should land on the skip link.
   await page.keyboard.press("Tab");
@@ -115,7 +116,7 @@ const browser = await puppeteer.launch({ executablePath: CHROME, headless: "new"
   await page.goto(`${ORIGIN}/`, { waitUntil: "networkidle2" });
 
   const sections = await page.evaluate(() =>
-    [...document.querySelectorAll("[data-theme]")].map((el) => ({
+    [...document.querySelectorAll("main [data-theme]")].map((el) => ({
       theme: el.getAttribute("data-theme"),
       id: el.id || "(unnamed)",
     })),
@@ -182,6 +183,96 @@ const browser = await puppeteer.launch({ executablePath: CHROME, headless: "new"
         `header over ${section.theme.padEnd(5)} — contrast ${ratio.toFixed(2)}:1`,
       );
   }
+  await page.close();
+}
+
+// ---------------------------------------------------------------- project media
+{
+  const page = await browser.newPage();
+  await page.setViewport({ width: 390, height: 844 });
+  await page.goto(`${ORIGIN}/`, { waitUntil: "networkidle2" });
+  await page.waitForSelector('[data-intro][data-done="true"]', { timeout: 3000 });
+
+  await page.evaluate(() => document.querySelector("#triber").scrollIntoView());
+  await new Promise((r) => setTimeout(r, 500));
+  const pause = "[data-tribe-reel-toggle]";
+  await page.focus(pause);
+  await page.keyboard.press("Enter");
+  const pausedIndex = await page.evaluate(
+    () =>
+      [...document.querySelectorAll("[data-tribe-phone] .tribe-phone__screen")].findIndex(
+        (image) => image.classList.contains("is-active"),
+      ),
+  );
+  await new Promise((r) => setTimeout(r, 2900));
+  const pauseState = await page.evaluate(
+    (selector) => ({
+      pressed: document.querySelector(selector)?.getAttribute("aria-pressed"),
+      index: [...document.querySelectorAll("[data-tribe-phone] .tribe-phone__screen")].findIndex(
+        (image) => image.classList.contains("is-active"),
+      ),
+    }),
+    pause,
+  );
+  if (pauseState.pressed !== "true") problems.push("Tribe reel: pause state not announced");
+  if (pauseState.index !== pausedIndex) problems.push("Tribe reel: screens advanced while paused");
+
+  await page.click('[data-work-filter="Product"]');
+  const workState = await page.evaluate(() => ({
+    visible: [...document.querySelectorAll("[data-work-card]")].filter((card) => !card.hidden)
+      .length,
+    pressed: document
+      .querySelector('[data-work-filter="Product"]')
+      ?.getAttribute("aria-pressed"),
+  }));
+  if (workState.visible !== 1 || workState.pressed !== "true")
+    problems.push("selected work: project filter did not update the cards");
+
+  await page.evaluate(() =>
+    document.querySelector("[data-process-notes]").scrollIntoView({
+      behavior: "instant",
+      block: "center",
+    }),
+  );
+  await page.click("[data-note-flip]");
+  const noteFlipped = await page.$eval(
+    "[data-note-flip]",
+    (button) => button.getAttribute("aria-pressed") === "true",
+  );
+  if (!noteFlipped) problems.push("process notes: note did not flip");
+
+  await page.evaluate(() =>
+    document.querySelector("[data-journal]").scrollIntoView({
+      behavior: "instant",
+      block: "center",
+    }),
+  );
+  const journalBefore = await page.$eval(
+    "[data-journal-count]",
+    (node) => node.textContent?.trim() ?? "",
+  );
+  await page.click("[data-journal-toggle]");
+  await page.click("[data-journal-next]");
+  const journalCount = await page.$eval("[data-journal-count]", (node) => node.textContent?.trim());
+  if (!journalCount || journalCount === journalBefore)
+    problems.push(
+      `journal: next control did not change "${journalBefore}" (received "${journalCount ?? "no count"}")`,
+    );
+
+  await page.evaluate(() =>
+    document.querySelector("[data-contact-form]").scrollIntoView({
+      behavior: "instant",
+      block: "center",
+    }),
+  );
+  await page.click('[data-contact-key="a"]');
+  await page.click('[data-contact-key="b"]');
+  await page.click("[data-contact-backspace]");
+  const contactValue = await page.$eval("[data-contact-input]", (input) => input.value);
+  if (contactValue !== "a")
+    problems.push(`contact keyboard: expected "a", received "${contactValue}"`);
+
+  console.log("Triber reel, work filters, process notes, journal and contact keyboard — checked");
   await page.close();
 }
 

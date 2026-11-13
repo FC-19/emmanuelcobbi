@@ -1,55 +1,95 @@
 ---
-import { profile, contact, links, nav } from "../content/site";
+import { profile, socials } from "../content/site";
 ---
 
 <footer class="site-footer">
-  <div class="shell">
-    <div class="site-footer__top">
-      <div>
-        <p class="site-footer__name">{profile.name}</p>
-        <p class="site-footer__blurb">
-          Software developer, designer, and author. Building Tribe, writing at
-          Bonteh Magazine, and working on stories about money, systems, and power.
-        </p>
-      </div>
+  <div class="shell site-footer__line">
+    <p class="site-footer__identity">
+      <strong>{profile.name}</strong>
+      <span>{profile.role}</span>
+    </p>
 
-      <div class="footer-links">
-        <div>
-          <h2>Explore</h2>
-          <ul>
-            {
-              nav.map((item) => (
-                <li>
-                  <a href={item.href}>{item.label}</a>
-                </li>
-              ))
-            }
-          </ul>
-        </div>
-        <div>
-          <h2>Elsewhere</h2>
-          <ul>
-            <li><a href={links.tribe} rel="noopener">Tribe</a></li>
-            <li><a href={links.bonteh} rel="noopener">Bonteh Magazine</a></li>
-            <li><a href="/writing">Published writing</a></li>
-            <li><a href="/about">Profile</a></li>
-          </ul>
-        </div>
-        <div>
-          <h2>Contact</h2>
-          <ul>
-            <li><a href={contact.whatsapp} rel="noopener">WhatsApp</a></li>
-            <li><a href={`mailto:${contact.email}`}>Email</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    <nav class="site-footer__socials" aria-label="Social links">
+      {
+        socials.map((social) => (
+          <a href={social.href} target="_blank" rel="me noopener noreferrer">
+            {social.label === "WhatsApp channel" ? "WhatsApp" : social.label}
+          </a>
+        ))
+      }
+    </nav>
 
-    <div class="site-footer__base">
-      <span
-        >© <span data-year>2026</span> {profile.name}. All rights reserved.</span
-      >
-      <span>Built as a static site. No trackers, no cookies.</span>
-    </div>
+    <p class="site-footer__copyright">
+      © <span data-year>2026</span> {profile.name}
+    </p>
   </div>
 </footer>
+
+<style>
+  .site-footer {
+    background: #0b0b0b;
+    color: #d7d7d7;
+  }
+
+  .site-footer__line {
+    display: grid;
+    gap: 1.4rem;
+    align-items: center;
+    padding-block: 2rem;
+  }
+
+  .site-footer__identity {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35rem 0.7rem;
+  }
+
+  .site-footer__identity strong {
+    font-size: 0.92rem;
+    color: #fff;
+  }
+
+  .site-footer__identity span,
+  .site-footer__copyright {
+    font-size: 0.72rem;
+    color: #858585;
+  }
+
+  .site-footer__socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem 1.2rem;
+  }
+
+  .site-footer__socials a {
+    color: #f0f0f0;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    text-decoration: none;
+  }
+
+  .site-footer__socials a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+
+  .site-footer__copyright {
+    margin: 0;
+  }
+
+  @media (min-width: 900px) {
+    .site-footer__line {
+      grid-template-columns: minmax(15rem, 0.9fr) minmax(22rem, 1.2fr) auto;
+    }
+
+    .site-footer__socials {
+      justify-content: center;
+      gap: 0.9rem;
+    }
+
+    .site-footer__copyright {
+      text-align: right;
+    }
+  }
+</style>

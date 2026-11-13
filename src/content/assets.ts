@@ -1,22 +1,20 @@
 /**
- * Asset ledger.
+ * Asset ledger. See docs/asset-manifest.md for sources, rights and the
+ * missing-media list.
  *
- * Every image the site renders is imported here so Astro can optimise it and so
- * there is one place to see what exists, where it came from, and how it may be
- * described. `status` is deliberately explicit:
- *
- *   original     supplied by Emmanuel, used as-is (cropped/resized only)
+ *   original     supplied file, cropped/resized only
  *   derived      a treatment applied to a supplied original
- *   capture      a screenshot taken from a live, public page
- *   illustration  composed or designed artwork, never presented as a screenshot
- *
- * See docs/asset-manifest.md for sources, licences and the missing-media list.
+ *   capture      screenshot of a live, public page
+ *   illustration product design artwork, never shown as a live screenshot
  */
 import type { ImageMetadata } from "astro";
 
+import bontehArticle from "../assets/bonteh-article.png";
+import bontehArticleMobile from "../assets/bonteh-article-mobile.png";
+import bontehLiveMobile from "../assets/bonteh-live-mobile.png";
 import bontehWeb from "../assets/bonteh-web.jpg";
 import bookMockup from "../assets/book-mockup.webp";
-import bookTablet from "../assets/book-tablet.webp";
+import ciaseWeb from "../assets/ciase-web.jpg";
 import eventAudience from "../assets/event-audience.jpg";
 import eventBanner from "../assets/event-banner.jpg";
 import eventPortrait from "../assets/event-portrait.jpg";
@@ -24,12 +22,20 @@ import eventStand from "../assets/event-stand.jpg";
 import eventTable from "../assets/event-table.jpg";
 import eventTalkWide from "../assets/event-talk-wide.jpg";
 import portraitAbout from "../assets/portrait-about.webp";
-import portraitCutout from "../assets/portrait-cutout.webp";
 import portraitHero from "../assets/portrait-hero.webp";
 import portraitOriginal from "../assets/portrait-original.jpg";
+import tribeAffiliate from "../assets/tribe-affiliate.jpg";
 import tribeAppDesign from "../assets/tribe-app-design.jpg";
+import tribeEarnings from "../assets/tribe-earnings.jpg";
 import tribeIcon from "../assets/tribe-icon.png";
+import tribeLiveMobile from "../assets/tribe-live-mobile.png";
 import tribeLockup from "../assets/tribe-lockup.png";
+import tribeMarket from "../assets/tribe-market.jpg";
+import tribeOrders from "../assets/tribe-orders.jpg";
+import tribePersonal from "../assets/tribe-personal.jpg";
+import tribeTia from "../assets/tribe-tia.jpg";
+import tribeVendor from "../assets/tribe-vendor.jpg";
+import tribeWallet from "../assets/tribe-wallet.jpg";
 import tribeWeb from "../assets/tribe-web.jpg";
 
 export type AssetStatus = "original" | "derived" | "capture" | "illustration";
@@ -39,91 +45,150 @@ export type Asset = {
   alt: string;
   status: AssetStatus;
   source: string;
-  note?: string;
 };
 
 export const assets = {
-  portraitHero: {
-    src: portraitHero,
-    alt: "Emmanuel Cobbi photographed from the chest up in a black Tribe cap and a black shirt carrying the yellow Tribe mark.",
-    status: "derived",
-    source: "Supplied photograph (Professional Portrait with Bold Graphic Shirt.png)",
-    note: "Subject segmented from the white studio backdrop, matte tightened, then given an editorial colour grade, a warm rim light, film grain and a vignette. Face and shirt branding untouched.",
-  },
-  portraitAbout: {
-    src: portraitAbout,
-    alt: "Portrait of Emmanuel Cobbi wearing a black Tribe cap and a black shirt with the yellow Tribe mark.",
-    status: "derived",
-    source: "Supplied photograph (Professional Portrait with Bold Graphic Shirt.png)",
-    note: "Calmer grade of the same cut-out, used where the hero treatment would be too strong.",
-  },
-  portraitCutout: {
-    src: portraitCutout,
-    alt: "Full-colour cut-out of Emmanuel Cobbi against a transparent background.",
-    status: "derived",
-    source: "Supplied photograph (Professional Portrait with Bold Graphic Shirt.png)",
-    note: "Segmentation only, kept for future use.",
-  },
-  portraitOriginal: {
-    src: portraitOriginal,
-    alt: "Studio photograph of Emmanuel Cobbi in a black Tribe cap and a black shirt carrying the yellow Tribe mark.",
-    status: "original",
-    source: "Supplied photograph (Professional Portrait with Bold Graphic Shirt.png)",
-  },
-  bookMockup: {
-    src: bookMockup,
-    alt: "Tales the Gods Keep hardcover standing at an angle, showing the title, the subtitle and the author's name.",
-    status: "original",
-    source: "Supplied book mockup (1770566273.jpg)",
-    note: "Studio backdrop keyed out; book artwork is the supplied cover, unaltered.",
-  },
-  bookTablet: {
-    src: bookTablet,
-    alt: "Tales the Gods Keep cover displayed on a tablet screen.",
-    status: "original",
-    source: "Supplied book mockup (1770568080.jpg)",
-  },
   tribeIcon: {
     src: tribeIcon,
-    alt: "Tribe app icon: a yellow rounded tile containing a black card mark with three white dots.",
+    alt: "Tribe app icon: a yellow rounded tile with a black card mark and three white dots.",
     status: "original",
-    source: "Original Tribe logo file (tribe logo2.png)",
-    note: "Cropped from the original lockup. Not redrawn, recoloured or substituted.",
+    source: "Original Tribe logo file",
   },
   tribeLockup: {
     src: tribeLockup,
     alt: "Tribe logo lockup: the yellow app icon beside the black tribe wordmark.",
     status: "original",
-    source: "Original Tribe logo file (tribe logo2.png)",
+    source: "Original Tribe logo file",
+  },
+  portraitHero: {
+    src: portraitHero,
+    alt: "Emmanuel Cobbi in a black Tribe cap and a black shirt carrying the yellow Tribe mark.",
+    status: "derived",
+    source: "Supplied portrait, segmented and graded",
+  },
+  portraitAbout: {
+    src: portraitAbout,
+    alt: "Portrait of Emmanuel Cobbi wearing a black Tribe cap and graphic Tribe shirt.",
+    status: "derived",
+    source: "Supplied portrait, segmented and graded for the About section",
+  },
+  portraitOriginal: {
+    src: portraitOriginal,
+    alt: "Emmanuel Cobbi in a studio portrait wearing a black Tribe cap and graphic Tribe shirt.",
+    status: "original",
+    source: "Supplied professional portrait",
   },
   tribeWeb: {
     src: tribeWeb,
-    alt: "Screenshot of the usetribeapp.com homepage showing the Tribe logo, the headline 'Your AI companion for money, work, and business' and a phone screen with a Tia conversation.",
+    alt: "The pre-rebrand Tribe product website: headline “Your AI companion for money, work, and business” beside a phone showing a Tia conversation.",
     status: "capture",
-    source: "https://usetribeapp.com/ captured 11 October 2026",
+    source: "https://usetribeapp.com/ — 11 Nov 2026",
   },
-  tribeAppDesign: {
-    src: tribeAppDesign,
-    alt: "Tribe mobile app interface design showing a vendor dashboard with total sales, orders, new customers, quick actions and recent orders.",
-    status: "illustration",
-    source: "Tribe app design files (Mobile UI/7.png)",
-    note: "Product interface design. Not a screenshot of a live production build; sample figures shown are placeholders.",
+  tribeLiveMobile: {
+    src: tribeLiveMobile,
+    alt: "The pre-rebrand mobile Tribe website with Tia messaging and the primary sign-up action.",
+    status: "capture",
+    source: "https://usetribeapp.com/ at 390px — 12 Nov 2026",
   },
   bontehWeb: {
     src: bontehWeb,
-    alt: "Screenshot of the Bonteh Magazine homepage showing the masthead, section navigation and the current lead story.",
+    alt: "The Bonteh Magazine homepage: masthead, section navigation and the lead story.",
     status: "capture",
-    source: "https://www.bontehmagazine.com/ captured 11 October 2026",
+    source: "https://www.bontehmagazine.com/ — 11 Nov 2026",
+  },
+  bontehLiveMobile: {
+    src: bontehLiveMobile,
+    alt: "The mobile Bonteh Magazine homepage showing the masthead and lead technology story.",
+    status: "capture",
+    source: "https://www.bontehmagazine.com/ at 390px — 12 Nov 2026",
+  },
+  bontehArticle: {
+    src: bontehArticle,
+    alt: "A Bonteh Magazine article page with a map illustration and the reading column.",
+    status: "capture",
+    source: "https://www.bontehmagazine.com/is-building-for-africa-becoming-a-trap/ — 12 Nov 2026",
+  },
+  bontehArticleMobile: {
+    src: bontehArticleMobile,
+    alt: "An Emmanuel Cobbi article on Bonteh Magazine as it appears at mobile width.",
+    status: "capture",
+    source: "https://www.bontehmagazine.com/is-building-for-africa-becoming-a-trap/ at 390px — 12 Nov 2026",
+  },
+  ciaseWeb: {
+    src: ciaseWeb,
+    alt: "The CIASE homepage: “Where Creativity, Languages, Innovation & Sustainability Connect” beside a sculptural film-strip image.",
+    status: "capture",
+    source: "https://ciase.se/ — 11 Nov 2026",
+  },
+  tribePersonal: {
+    src: tribePersonal,
+    alt: "Triber personal home screen showing a greeting, wallet balance and a message field for Tia.",
+    status: "illustration",
+    source: "Tribe app design files",
+  },
+  tribeVendor: {
+    src: tribeVendor,
+    alt: "Triber vendor dashboard with sales, orders, quick actions and recent orders.",
+    status: "illustration",
+    source: "Tribe app design files",
+  },
+  tribeAffiliate: {
+    src: tribeAffiliate,
+    alt: "Triber affiliate dashboard showing campaigns and recent earnings.",
+    status: "illustration",
+    source: "Tribe app design files",
+  },
+  tribeEarnings: {
+    src: tribeEarnings,
+    alt: "Triber earnings screen with a balance, earnings summary and recent transactions.",
+    status: "illustration",
+    source: "Tribe app design files",
+  },
+  tribeWallet: {
+    src: tribeWallet,
+    alt: "Triber wallet screen with a CFA balance, quick actions and recent activity.",
+    status: "illustration",
+    source: "Tribe app design files",
+  },
+  tribeMarket: {
+    src: tribeMarket,
+    alt: "Triber market screen with product categories, vendors and featured items.",
+    status: "illustration",
+    source: "Tribe app design files",
+  },
+  tribeOrders: {
+    src: tribeOrders,
+    alt: "Triber orders screen listing order numbers, statuses and totals.",
+    status: "illustration",
+    source: "Tribe app design files",
+  },
+  tribeTia: {
+    src: tribeTia,
+    alt: "Triber assistant screen with suggested prompts for Tia.",
+    status: "illustration",
+    source: "Tribe app design files",
+  },
+  tribeAppDesign: {
+    src: tribeAppDesign,
+    alt: "Triber vendor home screen showing business tools, sales and Tia guidance.",
+    status: "illustration",
+    source: "Tribe app design files",
+  },
+  bookMockup: {
+    src: bookMockup,
+    alt: "Tales the Gods Keep hardcover showing the title, subtitle and Emmanuel Cobbi's name.",
+    status: "original",
+    source: "Supplied book mockup",
   },
   eventBanner: {
     src: eventBanner,
-    alt: "Emmanuel Cobbi standing beside a Tribe roll-up banner at a business exhibition.",
+    alt: "Emmanuel Cobbi beside a Tribe roll-up banner at a business exhibition.",
     status: "original",
     source: "Supplied event photograph",
   },
   eventTable: {
     src: eventTable,
-    alt: "Emmanuel Cobbi talking with a visitor across a Tribe exhibitor table at an event.",
+    alt: "Emmanuel Cobbi talking with a visitor at the Tribe exhibitor table.",
     status: "original",
     source: "Supplied event photograph",
   },
@@ -135,19 +200,19 @@ export const assets = {
   },
   eventPortrait: {
     src: eventPortrait,
-    alt: "Emmanuel Cobbi standing in front of an event backdrop wearing an exhibitor badge.",
+    alt: "Emmanuel Cobbi in front of an event backdrop wearing an exhibitor badge.",
     status: "original",
     source: "Supplied event photograph",
   },
   eventAudience: {
     src: eventAudience,
-    alt: "Emmanuel Cobbi speaking into a microphone to a seated audience at an event.",
+    alt: "Emmanuel Cobbi speaking into a microphone to a seated audience.",
     status: "original",
     source: "Supplied event photograph",
   },
   eventStand: {
     src: eventStand,
-    alt: "Emmanuel Cobbi at the Tribe exhibition stand, showing branded bags and printed material on the table.",
+    alt: "Emmanuel Cobbi at the Tribe stand with branded bags and printed material.",
     status: "original",
     source: "Supplied event photograph",
   },

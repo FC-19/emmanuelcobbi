@@ -1,7 +1,7 @@
 ---
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import { profile, seo, links, contact } from "../content/site";
+import { profile, seo, links, contact, socials } from "../content/site";
 import "../styles/global.css";
 
 interface Props {
@@ -32,7 +32,7 @@ const personSchema = {
   "@type": "Person",
   name: profile.name,
   alternateName: profile.legalName,
-  jobTitle: "Software Developer, Author, and Founder of Tribe",
+  jobTitle: "Full-stack Developer, Product Designer, Writer and Author, Founder of Triber",
   description: seo.description,
   nationality: { "@type": "Country", name: "Cameroon" },
   url: seo.siteUrl,
@@ -45,10 +45,14 @@ const personSchema = {
     "Writing and essays",
   ],
   worksFor: [
-    { "@type": "Organization", name: "Tribe", url: links.tribe },
+    { "@type": "Organization", name: "Triber", url: links.tribe },
     { "@type": "Organization", name: "Bonteh Magazine", url: links.bonteh },
   ],
-  sameAs: [links.tribe, links.bonteh],
+  sameAs: [
+    links.tribe,
+    links.bonteh,
+    ...socials.map((social) => social.href),
+  ],
 };
 ---
 
@@ -61,14 +65,14 @@ const personSchema = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta name="color-scheme" content="light" />
-    <meta name="theme-color" content="#E20000" />
+    <meta name="theme-color" content="#141414" />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <link
       rel="preload"
-      href="/fonts/geist-latin.woff2"
+      href="/fonts/inter-tight-latin.woff2"
       as="font"
       type="font/woff2"
       crossorigin
@@ -102,6 +106,16 @@ const personSchema = {
     <slot name="head" />
   </head>
   <body>
+    <div class="intro" data-intro>
+      <div class="intro__inner">
+        <p class="intro__mark">{profile.initials}<span>.</span></p>
+        <p class="intro__role">{profile.discipline}</p>
+        <div class="intro__bar"><i data-intro-bar></i></div>
+        <div class="intro__meta"><span>Portfolio 2026</span><span>Product · Code · Words</span></div>
+        <button class="intro__skip" type="button" tabindex="-1" data-intro-skip>Enter now</button>
+      </div>
+    </div>
+    <div class="scroll-progress" data-scroll-progress aria-hidden="true"></div>
     <a class="skip-link" href="#main">Skip to content</a>
     <Header />
     <main id="main">
@@ -123,12 +137,12 @@ const personSchema = {
       //    blue and dark backgrounds.
       var header = document.querySelector("[data-site-header]");
       var themedSections = Array.prototype.slice.call(
-        document.querySelectorAll("[data-theme]"),
+        document.querySelectorAll("main [data-theme]"),
       );
 
       if (header && themedSections.length) {
         var headerStyles = {
-          red: { fg: "#ffffff", bg: "rgba(226, 0, 0, 0.92)" },
+          red: { fg: "#ffffff", bg: "rgba(20, 18, 17, 0.92)" },
           blue: { fg: "#ffffff", bg: "rgba(49, 89, 244, 0.92)" },
           ink: { fg: "#F7F2EA", bg: "rgba(20, 18, 17, 0.9)" },
           cream: { fg: "#141211", bg: "rgba(247, 242, 234, 0.92)" },
@@ -169,8 +183,155 @@ const personSchema = {
         window.addEventListener("resize", request, { passive: true });
       }
 
-      // 2. Section reveals. Skipped entirely when motion is reduced.
+      // 2. Short opening sequence. It exists to set the tone, never to gate
+      //    access: the button, reduced-motion preference and a hard timer all
+      //    dismiss it.
+      var intro = document.querySelector("[data-intro]");
+      var introSkip = document.querySelector("[data-intro-skip]");
+      var introBar = document.querySelector("[data-intro-bar]");
       var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var dismissIntro = function () {
+        if (!intro || intro.getAttribute("data-done") === "true") return;
+        if (introBar) introBar.style.width = "100%";
+        intro.setAttribute("data-done", "true");
+        document.body.classList.remove("intro-open");
+      };
+
+      if (intro) {
+        document.body.classList.add("intro-open");
+        if (reduceMotion) {
+          dismissIntro();
+        } else {
+          requestAnimationFrame(function () {
+            if (introBar) introBar.style.width = "100%";
+          });
+          setTimeout(dismissIntro, 1250);
+          if (introSkip) introSkip.addEventListener("click", dismissIntro);
+          document.addEventListener("keydown", dismissIntro, { once: true });
+        }
+      }
+
+      // 3. Reading progress.
+      var progress = document.querySelector("[data-scroll-progress]");
+      if (progress) {
+        var updateProgress = function () {
+          var max = document.documentElement.scrollHeight - window.innerHeight;
+          var value = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+          progress.style.setProperty("--scroll-progress", (value * 100).toFixed(2) + "%");
+        };
+        updateProgress();
+        window.addEventListener("scroll", updateProgress, { passive: true });
+        window.addEventListener("resize", updateProgress, { passive: true });
+      }
+
+      // 4. Theme switch and the local clock shown in the menu.
+      var themeToggle = document.querySelector("[data-theme-toggle]");
+      var applyTheme = function (theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        document.documentElement.style.colorScheme = theme === "dark" ? "dark" : "light";
+        if (themeToggle) themeToggle.setAttribute("aria-pressed", String(theme === "dark"));
+      };
+      var storedTheme = "light";
+      try {
+        storedTheme = localStorage.getItem("site-theme") || "light";
+      } catch {}
+      applyTheme(storedTheme);
+      if (themeToggle) {
+        themeToggle.addEventListener("click", function () {
+          var next =
+            document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+          applyTheme(next);
+          try {
+            localStorage.setItem("site-theme", next);
+          } catch {}
+        });
+      }
+
+      var localTime = document.querySelector("[data-local-time]");
+      if (localTime) {
+        var tick = function () {
+          localTime.textContent = new Intl.DateTimeFormat("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false,
+          }).format(new Date());
+        };
+        tick();
+        setInterval(tick, 1000);
+      }
+
+      // 5. Pointer-reactive motion. This is deliberately decorative: every
+      //    section remains complete and legible without it.
+      if (!reduceMotion) {
+        var heroStage = document.querySelector("[data-hero-stage]");
+        if (heroStage) {
+          heroStage.addEventListener(
+            "pointermove",
+            function (event) {
+              if (event.pointerType && event.pointerType !== "mouse") return;
+              var rect = heroStage.getBoundingClientRect();
+              heroStage.style.setProperty(
+                "--spot-x",
+                (((event.clientX - rect.left) / rect.width) * 100).toFixed(2) + "%",
+              );
+              heroStage.style.setProperty(
+                "--spot-y",
+                (((event.clientY - rect.top) / rect.height) * 100).toFixed(2) + "%",
+              );
+            },
+            { passive: true },
+          );
+        }
+
+        document.querySelectorAll("[data-work-card]").forEach(function (card) {
+          var media = card.querySelector("[data-work-media]");
+          card.addEventListener(
+            "pointermove",
+            function (event) {
+              if (event.pointerType && event.pointerType !== "mouse") return;
+              var rect = card.getBoundingClientRect();
+              var x = (event.clientX - rect.left) / rect.width - 0.5;
+              var y = (event.clientY - rect.top) / rect.height - 0.5;
+              card.style.setProperty("--mx", (x * 100 + 50).toFixed(2) + "%");
+              card.style.setProperty("--my", (y * 100 + 50).toFixed(2) + "%");
+              if (media) {
+                media.style.setProperty("--ry", (x * 5).toFixed(2) + "deg");
+                media.style.setProperty("--rx", (-y * 4).toFixed(2) + "deg");
+              }
+            },
+            { passive: true },
+          );
+          card.addEventListener("pointerleave", function () {
+            if (!media) return;
+            media.style.setProperty("--ry", "0deg");
+            media.style.setProperty("--rx", "0deg");
+          });
+        });
+
+        document.querySelectorAll("[data-screen-stage]").forEach(function (stage) {
+          stage.addEventListener(
+            "pointermove",
+            function (event) {
+              if (event.pointerType && event.pointerType !== "mouse") return;
+              var rect = stage.getBoundingClientRect();
+              var x = (event.clientX - rect.left) / rect.width - 0.5;
+              var y = (event.clientY - rect.top) / rect.height - 0.5;
+              stage.style.setProperty("--stage-ry", (x * 3.2).toFixed(2) + "deg");
+              stage.style.setProperty("--stage-rx", (-y * 2.4).toFixed(2) + "deg");
+              stage.style.setProperty("--stage-lift", "-4px");
+            },
+            { passive: true },
+          );
+          stage.addEventListener("pointerleave", function () {
+            stage.style.setProperty("--stage-ry", "0deg");
+            stage.style.setProperty("--stage-rx", "0deg");
+            stage.style.setProperty("--stage-lift", "0px");
+          });
+        });
+      }
+
+      // 6. Section reveals. Skipped entirely when motion is reduced.
       var revealTargets = Array.prototype.slice.call(
         document.querySelectorAll("[data-reveal]"),
       );
@@ -195,7 +356,7 @@ const personSchema = {
         });
       }
 
-      // 3. Mobile menu.
+      // 7. Mobile menu.
       var menu = document.querySelector("[data-mobile-menu]");
       var toggle = document.querySelector("[data-menu-toggle]");
 
@@ -208,12 +369,16 @@ const personSchema = {
             // The panel transitions out of `visibility: hidden`, and a hidden
             // element cannot take focus. Wait two frames: the first renders the
             // newly visible state, the second can focus it.
+            var focusFirstLink = function () {
+              if (menu.getAttribute("data-open") !== "true") return;
+              if (menu.contains(document.activeElement)) return;
+              var firstLink = menu.querySelector("a");
+              if (firstLink) firstLink.focus();
+            };
             requestAnimationFrame(function () {
-              requestAnimationFrame(function () {
-                var firstLink = menu.querySelector("a");
-                if (firstLink) firstLink.focus();
-              });
+              requestAnimationFrame(focusFirstLink);
             });
+            setTimeout(focusFirstLink, 360);
           }
         };
 
@@ -233,7 +398,342 @@ const personSchema = {
         });
       }
 
-      // 4. Keep the current year honest in the footer.
+      // 8. Triber product reel. The full mobile gallery now lives here instead
+      //    of occupying a separate section of the page.
+      var tribePhone = document.querySelector("[data-tribe-phone]");
+      if (tribePhone) {
+        var tribeScreens = Array.prototype.slice.call(
+          tribePhone.querySelectorAll(".tribe-phone__screen"),
+        );
+        var tribeCaption = document.querySelector("[data-tribe-caption]");
+        var tribeToggle = document.querySelector("[data-tribe-reel-toggle]");
+        var tribeLabels = [
+          "Personal",
+          "Vendor",
+          "Tia",
+          "Market",
+          "Wallet",
+          "Orders",
+          "Earnings",
+          "Affiliates",
+          "Website",
+        ];
+        var tribeIndex = 0;
+        var tribeTimer = null;
+        var advanceTribe = function () {
+          tribeScreens[tribeIndex].classList.remove("is-active");
+          tribeIndex = (tribeIndex + 1) % tribeScreens.length;
+          tribeScreens[tribeIndex].classList.add("is-active");
+          if (tribeCaption) tribeCaption.textContent = tribeLabels[tribeIndex] || "Triber";
+        };
+        var setTribePaused = function (paused) {
+          if (tribeTimer) {
+            clearInterval(tribeTimer);
+            tribeTimer = null;
+          }
+          if (!paused && !reduceMotion && tribeScreens.length > 1) {
+            tribeTimer = setInterval(advanceTribe, 2600);
+          }
+          if (tribeToggle) {
+            tribeToggle.setAttribute("aria-pressed", String(paused));
+            tribeToggle.textContent = paused ? "Resume reel" : "Pause reel";
+            tribeToggle.setAttribute(
+              "aria-label",
+              paused ? "Resume Triber screen animation" : "Pause Triber screen animation",
+            );
+          }
+        };
+        if (!reduceMotion && tribeScreens.length > 1) {
+          setTribePaused(false);
+          if (tribeToggle) {
+            tribeToggle.addEventListener("click", function () {
+              setTribePaused(tribeToggle.getAttribute("aria-pressed") !== "true");
+            });
+          }
+        } else if (tribeToggle) {
+          tribeToggle.hidden = true;
+        }
+      }
+
+      // 9. Screen galleries: controls, keyboard scrolling and a lightbox.
+      document.querySelectorAll("[data-phone-rail]").forEach(function (rail) {
+        var root = rail.closest("[data-project-screens]");
+        var progress = root && root.querySelector("[data-rail-progress]");
+        var previous = root && root.querySelector("[data-rail-prev]");
+        var next = root && root.querySelector("[data-rail-next]");
+        var setRailProgress = function () {
+          var max = rail.scrollWidth - rail.clientWidth;
+          var value = max > 0 ? Math.min(1, rail.scrollLeft / max) : 0;
+          if (progress) progress.style.width = (value * 100).toFixed(2) + "%";
+        };
+        var moveRail = function (direction) {
+          rail.scrollBy({
+            left: direction * Math.max(240, rail.clientWidth * 0.72),
+            behavior: reduceMotion ? "auto" : "smooth",
+          });
+        };
+
+        rail.addEventListener("scroll", setRailProgress, { passive: true });
+        window.addEventListener("resize", setRailProgress, { passive: true });
+        if (previous) previous.addEventListener("click", function () { moveRail(-1); });
+        if (next) next.addEventListener("click", function () { moveRail(1); });
+        setRailProgress();
+
+        rail.addEventListener("keydown", function (event) {
+          if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+          event.preventDefault();
+          var direction = event.key === "ArrowRight" ? 1 : -1;
+          moveRail(direction);
+        });
+      });
+
+      document.querySelectorAll("[data-screen-open]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          var root = button.closest("[data-project-screens]");
+          var dialog = root && root.querySelector("[data-screen-dialog]");
+          if (!dialog || typeof dialog.showModal !== "function") return;
+          var image = dialog.querySelector("[data-screen-dialog-image]");
+          var title = dialog.querySelector("[data-screen-dialog-title]");
+          if (image) {
+            image.src = button.getAttribute("data-src") || "";
+            image.alt = button.getAttribute("data-alt") || "";
+          }
+          if (title) title.textContent = button.getAttribute("data-label") || "Project screen";
+          dialog.showModal();
+        });
+      });
+
+      document.querySelectorAll("[data-screen-close]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          var dialog = button.closest("[data-screen-dialog]");
+          if (dialog) dialog.close();
+        });
+      });
+
+      document.querySelectorAll("[data-screen-dialog]").forEach(function (dialog) {
+        dialog.addEventListener("click", function (event) {
+          if (event.target === dialog) dialog.close();
+        });
+      });
+
+      // 10. Filterable selected work.
+      var workFilterButtons = Array.prototype.slice.call(
+        document.querySelectorAll("[data-work-filter]"),
+      );
+      var workCards = Array.prototype.slice.call(document.querySelectorAll("[data-work-card]"));
+      var workEmpty = document.querySelector("[data-work-empty]");
+      if (workFilterButtons.length && workCards.length) {
+        workFilterButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            var filter = button.getAttribute("data-work-filter") || "All";
+            workFilterButtons.forEach(function (item) {
+              var active = item === button;
+              item.classList.toggle("is-active", active);
+              item.setAttribute("aria-pressed", String(active));
+            });
+
+            var visible = 0;
+            workCards.forEach(function (card) {
+              var categories = (card.getAttribute("data-work-category") || "").split(" ");
+              var show = filter === "All" || categories.indexOf(filter) !== -1;
+              card.hidden = !show;
+              if (show) visible += 1;
+            });
+            if (workEmpty) workEmpty.hidden = visible !== 0;
+          });
+        });
+      }
+
+      // 11. Sticky-note workflow: individual flips, flip-all and shuffle.
+      var processNotes = document.querySelector("[data-process-notes]");
+      if (processNotes) {
+        var noteCards = Array.prototype.slice.call(processNotes.querySelectorAll("[data-note]"));
+        var flipButtons = Array.prototype.slice.call(
+          processNotes.querySelectorAll("[data-note-flip]"),
+        );
+        flipButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            var flipped = button.getAttribute("aria-pressed") === "true";
+            button.setAttribute("aria-pressed", String(!flipped));
+          });
+        });
+
+        var flipAll = document.querySelector("[data-process-flip-all]");
+        if (flipAll) {
+          flipAll.addEventListener("click", function () {
+            var showBack = flipButtons.some(function (button) {
+              return button.getAttribute("aria-pressed") !== "true";
+            });
+            flipButtons.forEach(function (button) {
+              button.setAttribute("aria-pressed", String(showBack));
+            });
+            flipAll.textContent = showBack ? "Show fronts" : "Flip all";
+          });
+        }
+
+        var shuffle = document.querySelector("[data-process-shuffle]");
+        if (shuffle) {
+          shuffle.addEventListener("click", function () {
+            for (var i = noteCards.length - 1; i > 0; i -= 1) {
+              var j = Math.floor(Math.random() * (i + 1));
+              processNotes.insertBefore(noteCards[i], noteCards[j]);
+              var swap = noteCards[i];
+              noteCards[i] = noteCards[j];
+              noteCards[j] = swap;
+            }
+          });
+        }
+      }
+
+      // 12. Journal deck with manual controls and a pausable rotation.
+      var journal = document.querySelector("[data-journal]");
+      if (journal) {
+        var journalSlides = Array.prototype.slice.call(
+          journal.querySelectorAll("[data-journal-slide]"),
+        );
+        var journalCount = journal.querySelector("[data-journal-count]");
+        var journalPrevious = journal.querySelector("[data-journal-prev]");
+        var journalNext = journal.querySelector("[data-journal-next]");
+        var journalToggle = journal.querySelector("[data-journal-toggle]");
+        var journalIndex = 0;
+        var journalTimer = null;
+        var renderJournal = function () {
+          journalSlides.forEach(function (slide, index) {
+            var length = journalSlides.length;
+            var offset = ((index - journalIndex + length / 2 + length) % length) - length / 2;
+            slide.style.setProperty("--offset", String(offset));
+            slide.style.setProperty("--abs", String(Math.abs(offset)));
+            slide.style.setProperty("--rotate", String(offset * 0.8) + "deg");
+            slide.classList.toggle("is-active", index === journalIndex);
+            slide.setAttribute("aria-hidden", index === journalIndex ? "false" : "true");
+          });
+          if (journalCount) {
+            journalCount.textContent =
+              String(journalIndex + 1).padStart(2, "0") +
+              " / " +
+              String(journalSlides.length).padStart(2, "0");
+          }
+        };
+        var setJournalPaused = function (paused) {
+          if (journalTimer) {
+            clearInterval(journalTimer);
+            journalTimer = null;
+          }
+          if (!paused && !reduceMotion && journalSlides.length > 1) {
+            journalTimer = setInterval(function () {
+              journalIndex = (journalIndex + 1) % journalSlides.length;
+              renderJournal();
+            }, 4500);
+          }
+          if (journalToggle) {
+            journalToggle.setAttribute("aria-pressed", String(paused));
+            var label = journalToggle.querySelector(".sr-only");
+            if (label) {
+              label.textContent = paused
+                ? "Resume journal rotation"
+                : "Pause journal rotation";
+            }
+          }
+        };
+
+        if (journalPrevious) {
+          journalPrevious.addEventListener("click", function () {
+            journalIndex = (journalIndex - 1 + journalSlides.length) % journalSlides.length;
+            renderJournal();
+            setJournalPaused(true);
+          });
+        }
+        if (journalNext) {
+          journalNext.addEventListener("click", function () {
+            journalIndex = (journalIndex + 1) % journalSlides.length;
+            renderJournal();
+            setJournalPaused(true);
+          });
+        }
+        if (journalToggle) {
+          journalToggle.addEventListener("click", function () {
+            setJournalPaused(journalToggle.getAttribute("aria-pressed") !== "true");
+          });
+        }
+
+        renderJournal();
+        setJournalPaused(reduceMotion);
+      }
+
+      // 13. The contact keyboard composes a real mailto message.
+      var contactForm = document.querySelector("[data-contact-form]");
+      if (contactForm) {
+        var contactInput = contactForm.querySelector("[data-contact-input]");
+        var contactStatus = contactForm.querySelector("[data-contact-status]");
+        var appendContactText = function (value) {
+          if (!contactInput) return;
+          var start = contactInput.selectionStart ?? contactInput.value.length;
+          var end = contactInput.selectionEnd ?? contactInput.value.length;
+          contactInput.value =
+            contactInput.value.slice(0, start) + value + contactInput.value.slice(end);
+          contactInput.focus();
+          contactInput.setSelectionRange(start + value.length, start + value.length);
+          contactInput.dispatchEvent(new Event("input", { bubbles: true }));
+        };
+        var removeContactText = function () {
+          if (!contactInput) return;
+          var start = contactInput.selectionStart ?? contactInput.value.length;
+          var end = contactInput.selectionEnd ?? contactInput.value.length;
+          if (start !== end) {
+            contactInput.value =
+              contactInput.value.slice(0, start) + contactInput.value.slice(end);
+          } else if (start > 0) {
+            contactInput.value =
+              contactInput.value.slice(0, start - 1) + contactInput.value.slice(start);
+            start -= 1;
+          } else {
+            return;
+          }
+          contactInput.focus();
+          contactInput.setSelectionRange(start, start);
+          contactInput.dispatchEvent(new Event("input", { bubbles: true }));
+        };
+
+        contactForm.querySelectorAll("[data-contact-key]").forEach(function (button) {
+          button.addEventListener("click", function () {
+            appendContactText(button.getAttribute("data-contact-key") || "");
+          });
+        });
+        var spaceKey = contactForm.querySelector("[data-contact-space]");
+        if (spaceKey) {
+          spaceKey.addEventListener("click", function () {
+            appendContactText(" ");
+          });
+        }
+        var deleteKey = contactForm.querySelector("[data-contact-backspace]");
+        if (deleteKey) deleteKey.addEventListener("click", removeContactText);
+
+        contactForm.addEventListener("submit", function (event) {
+          event.preventDefault();
+          var message = contactInput ? contactInput.value.trim() : "";
+          if (!message) {
+            if (contactStatus) {
+              contactStatus.textContent = "Type a message first, then press Send.";
+            }
+            if (contactInput) contactInput.focus();
+            return;
+          }
+          var email = contactForm.getAttribute("data-email") || "";
+          var subject = "A note from emmanuelcobbi.xyz";
+          window.location.href =
+            "mailto:" +
+            email +
+            "?subject=" +
+            encodeURIComponent(subject) +
+            "&body=" +
+            encodeURIComponent(message);
+          if (contactStatus) {
+            contactStatus.textContent = "Opening your email app with the message ready to send.";
+          }
+        });
+      }
+
+      // 14. Keep the current year honest in the footer.
       var year = document.querySelector("[data-year]");
       if (year) year.textContent = String(new Date().getFullYear());
     </script>

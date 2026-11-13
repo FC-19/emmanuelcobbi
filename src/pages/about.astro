@@ -1,13 +1,13 @@
 ---
 import { Image } from "astro:assets";
 import Base from "../layouts/Base.astro";
+import WorkProcess from "../components/WorkProcess.astro";
 import { assets } from "../content/assets";
 import {
   profile,
   about,
   experience,
   education,
-  capabilities,
   contact,
 } from "../content/site";
 
@@ -16,7 +16,7 @@ const disciplines = about.disciplines;
 
 <Base
   title="About"
-  description="Emmanuel Cobbi is a Cameroonian software developer, designer, and author. Founder of Tribe and CTO, software developer, and writer at Bonteh Magazine."
+  description="Emmanuel Cobbi is a software developer, designer, and author. Founder of Triber and CTO, software developer, and writer at Bonteh Magazine."
   path="/about"
   ogType="profile"
 >
@@ -28,8 +28,8 @@ const disciplines = about.disciplines;
           {profile.name} builds things people can use.
         </h1>
         <p class="page-head__lede">
-          {profile.identity} Founder of Tribe. CTO, software developer, and writer at
-          Bonteh Magazine. Based in {profile.location}.
+          {profile.identity} Founder of Triber. CTO, software developer, and writer at
+          Bonteh Magazine.
         </p>
       </div>
       <div class="about-head__portrait">
@@ -64,10 +64,10 @@ const disciplines = about.disciplines;
 
         <h2>What I do now</h2>
         <p>
-          <strong>Tribe</strong> is my main focus. I am its founder and software developer,
+          <strong>Triber</strong> is my main focus. I am its founder and software developer,
           building an AI-powered platform that brings business tools, commerce, and
           payments into one connected experience, with Tia available on WhatsApp and the
-          web. You can read more on the <a class="inline-link" href="/work/tribe">Tribe case study</a>.
+          web. You can read more on the <a class="inline-link" href="/work/triber">Triber case study</a>.
         </p>
         <p>
           At <strong>Bonteh Magazine</strong> I work as CTO, software developer, and writer —
@@ -118,18 +118,6 @@ const disciplines = about.disciplines;
         ))
       }
 
-      <h2 class="display-2 mt-3">Capabilities</h2>
-      <div class="capability-grid mt-2">
-        {
-          capabilities.map((item) => (
-            <div class="capability">
-              <h3>{item.title}</h3>
-              <p>{item.body}</p>
-            </div>
-          ))
-        }
-      </div>
-
       <h2 class="display-2 mt-3">Disciplines</h2>
       <ul class="bullets">
         {disciplines.map((item) => <li>{item}</li>)}
@@ -147,6 +135,7 @@ const disciplines = about.disciplines;
       </div>
     </div>
   </section>
+  <WorkProcess />
 </Base>
 
 <style>

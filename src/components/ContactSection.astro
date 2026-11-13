@@ -1,54 +1,356 @@
 ---
-import { contactSection, contact, profile } from "../content/site";
+import { contactSection, contact, socials } from "../content/site";
+
+const keyRows = [
+  ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+  ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+  ["Z", "X", "C", "V", "B", "N", "M"],
+];
 ---
 
-<section class="section section--red" id="contact" data-theme="red">
-  <div class="shell contact-grid">
-    <div data-reveal>
-      <p class="eyebrow">{contactSection.eyebrow}</p>
-      <h2 class="display-1 contact__title">{contactSection.title}</h2>
-      <p class="contact__body">{contactSection.body}</p>
-      <div class="actions contact__actions">
-        <a class="pill pill--light" href={contactSection.primary.href} rel="noopener">
-          {contactSection.primary.label}
-        </a>
-        <a class="pill pill--ghost" href={contactSection.secondary.href}>
-          {contactSection.secondary.label}
-        </a>
+<section class="section section--ink contact-keyboard" id="contact" data-theme="ink">
+  <div class="shell contact-keyboard__layout">
+    <div class="contact-keyboard__copy" data-reveal>
+      <p class="eyebrow">Leave a note</p>
+      <h2 class="display-1">
+        {contactSection.title.map((line) => <span>{line}</span>)}
+      </h2>
+      <p class="contact-keyboard__body">
+        Type the message here, then send it straight to my inbox. I read and answer every
+        note personally.
+      </p>
+      <div class="contact-keyboard__direct">
+        <a href={`mailto:${contact.email}`}>{contact.email}</a>
+        <a href={contact.whatsapp} rel="noopener">WhatsApp · {contact.phoneDisplay}</a>
       </div>
     </div>
 
-    <ul class="contact-list" data-reveal style="--reveal-delay:0.1s">
-      <li>
-        <span>WhatsApp</span>
-        <a href={contact.whatsapp} rel="noopener">{contact.phoneDisplay}</a>
-      </li>
-      <li>
-        <span>Email</span>
-        <a href={`mailto:${contact.email}`}>{contact.email}</a>
-      </li>
-      <li>
-        <span>Based</span>
-        <p>{profile.location}</p>
-      </li>
-    </ul>
+    <form
+      class="message-keyboard"
+      data-contact-form
+      data-email={contact.email}
+      action={`mailto:${contact.email}`}
+      method="get"
+      data-reveal
+      style="--reveal-delay:0.08s"
+    >
+      <div class="message-keyboard__screen">
+        <label class="sr-only" for="contact-message">Your message</label>
+        <input
+          id="contact-message"
+          name="message"
+          type="text"
+          data-contact-input
+          placeholder="Type a message…"
+          autocomplete="off"
+        />
+        <span class="message-keyboard__cursor" aria-hidden="true"></span>
+      </div>
+
+      <div class="message-keyboard__shortcuts" aria-label="Social links">
+        {
+          socials.slice(0, 4).map((social) => (
+            <a href={social.href} target="_blank" rel="me noopener noreferrer">
+              {social.label}
+              <span aria-hidden="true">↗</span>
+            </a>
+          ))
+        }
+      </div>
+
+      <div class="message-keyboard__keys">
+        {
+          keyRows.map((row) => (
+            <div class="message-keyboard__row" class:list={[row.length < 10 && "is-inset"]}>
+              {row.map((key) => (
+                <button type="button" data-contact-key={key.toLowerCase()}>
+                  {key}
+                </button>
+              ))}
+            </div>
+          ))
+        }
+        <div class="message-keyboard__row message-keyboard__row--bottom">
+          <button
+            type="button"
+            class="message-keyboard__delete"
+            data-contact-backspace
+            aria-label="Delete last character"
+          >
+            ⌫
+          </button>
+          <button type="button" class="message-keyboard__space" data-contact-space>
+            space
+          </button>
+          <button type="submit" class="message-keyboard__send">
+            Send <span aria-hidden="true">↗</span>
+          </button>
+        </div>
+      </div>
+
+      <p class="message-keyboard__status" data-contact-status aria-live="polite">
+        Your message opens in your email app, ready to send.
+      </p>
+    </form>
   </div>
 </section>
 
 <style>
-  .contact__title {
+  .contact-keyboard {
+    overflow: hidden;
+    padding-block: clamp(4.5rem, 9vw, 8rem);
+  }
+
+  .contact-keyboard__layout {
+    display: grid;
+    gap: clamp(2.5rem, 6vw, 5rem);
+    align-items: center;
+  }
+
+  .contact-keyboard__copy h2 {
+    max-width: 10ch;
     margin-top: 1rem;
-    max-width: 18ch;
   }
 
-  .contact__body {
-    margin-top: 1.25rem;
-    font-size: clamp(1.05rem, 1.6vw, 1.25rem);
-    color: rgba(255, 255, 255, 0.86);
-    max-width: 32ch;
+  .contact-keyboard__copy h2 span {
+    display: block;
   }
 
-  .contact__actions {
-    margin-top: 2rem;
+  .contact-keyboard__copy h2 span:not(:first-child) {
+    color: #777;
+  }
+
+  .contact-keyboard__body {
+    max-width: 34ch;
+    margin-top: 1.4rem;
+    color: #b4b4b4;
+    line-height: 1.7;
+  }
+
+  .contact-keyboard__direct {
+    display: grid;
+    gap: 0.55rem;
+    margin-top: 1.8rem;
+  }
+
+  .contact-keyboard__direct a {
+    width: fit-content;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #ffffff;
+    text-decoration-thickness: 1px;
+    text-decoration-color: #777;
+    text-underline-offset: 0.25em;
+  }
+
+  .contact-keyboard__direct a:hover {
+    text-decoration-color: #ffffff;
+  }
+
+  .message-keyboard {
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 28px;
+    padding: clamp(1rem, 2.6vw, 1.7rem);
+    background: #171717;
+    box-shadow:
+      0 36px 90px -50px rgba(0, 0, 0, 0.95),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .message-keyboard__screen {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 3.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 12px;
+    padding: 0 1rem;
+    background: #090909;
+  }
+
+  .message-keyboard__screen::before {
+    content: ">";
+    margin-right: 0.7rem;
+    color: #696969;
+    font-family: var(--font-mono);
+  }
+
+  .message-keyboard__screen input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #f7f7f7;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+  }
+
+  .message-keyboard__screen input::placeholder {
+    color: #747474;
+  }
+
+  .message-keyboard__cursor {
+    position: absolute;
+    right: 1.2rem;
+    width: 1px;
+    height: 1.2rem;
+    background: #f7f7f7;
+    opacity: 0;
+    animation: keyboard-caret 1s steps(1) infinite;
+  }
+
+  .message-keyboard__screen:focus-within .message-keyboard__cursor {
+    opacity: 1;
+  }
+
+  .message-keyboard__shortcuts {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.55rem;
+    margin-top: 0.75rem;
+  }
+
+  .message-keyboard__shortcuts a {
+    display: flex;
+    min-height: 2.7rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.3rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 0.55rem 0.75rem;
+    background: #202020;
+    color: #d7d7d7;
+    font-size: 0.66rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .message-keyboard__shortcuts a:hover {
+    background: #2a2a2a;
+  }
+
+  .message-keyboard__keys {
+    display: grid;
+    gap: 0.55rem;
+    margin-top: 0.75rem;
+  }
+
+  .message-keyboard__row {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+
+  .message-keyboard__row.is-inset {
+    width: 90%;
+    margin-inline: auto;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+  }
+
+  .message-keyboard__row.is-inset:nth-child(3) {
+    width: 70%;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+
+  .message-keyboard__keys button {
+    min-width: 0;
+    min-height: 3rem;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 10px;
+    background: linear-gradient(#252525, #1d1d1d);
+    color: #d7d7d7;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.07),
+      0 4px 0 #080808;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    cursor: pointer;
+    transition:
+      transform 0.08s ease,
+      background-color 0.15s ease;
+  }
+
+  .message-keyboard__keys button:hover {
+    background: linear-gradient(#2e2e2e, #242424);
+  }
+
+  .message-keyboard__keys button:active,
+  .message-keyboard__keys button.is-pressed {
+    transform: translateY(3px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  }
+
+  .message-keyboard__row--bottom {
+    grid-template-columns: 0.75fr 3fr 0.9fr;
+  }
+
+  .message-keyboard__delete,
+  .message-keyboard__space,
+  .message-keyboard__send {
+    min-height: 3.25rem !important;
+  }
+
+  .message-keyboard__send {
+    background: #f4f4f4 !important;
+    color: #141414 !important;
+    font-weight: 700;
+  }
+
+  .message-keyboard__status {
+    margin-top: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    line-height: 1.55;
+    color: #8d8d8d;
+  }
+
+  @keyframes keyboard-caret {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .contact-keyboard__layout {
+      grid-template-columns: minmax(18rem, 0.72fr) minmax(34rem, 1.28fr);
+      align-items: center;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .message-keyboard {
+      margin-inline: calc(var(--pad) * -0.35);
+      border-radius: 20px;
+      padding: 0.8rem;
+    }
+
+    .message-keyboard__shortcuts {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .message-keyboard__row,
+    .message-keyboard__row.is-inset,
+    .message-keyboard__row.is-inset:nth-child(3) {
+      width: 100%;
+      gap: 0.35rem;
+    }
+
+    .message-keyboard__keys {
+      gap: 0.35rem;
+    }
+
+    .message-keyboard__keys button {
+      min-height: 2.65rem;
+      border-radius: 7px;
+      font-size: 0.6rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .message-keyboard__cursor {
+      animation: none;
+    }
   }
 </style>

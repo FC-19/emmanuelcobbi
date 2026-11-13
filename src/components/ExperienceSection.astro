@@ -1,5 +1,5 @@
 ---
-import { experience, education, capabilities } from "../content/site";
+import { experience, education } from "../content/site";
 ---
 
 <section class="section section--cream" id="experience" data-theme="cream">
@@ -43,19 +43,6 @@ import { experience, education, capabilities } from "../content/site";
       }
     </div>
 
-    <div class="experience__capabilities" data-reveal>
-      <h3 class="eyebrow">Capabilities</h3>
-      <div class="capability-grid">
-        {
-          capabilities.map((item) => (
-            <div class="capability">
-              <h3>{item.title}</h3>
-              <p>{item.body}</p>
-            </div>
-          ))
-        }
-      </div>
-    </div>
   </div>
 </section>
 
@@ -96,11 +83,4 @@ import { experience, education, capabilities } from "../content/site";
     }
   }
 
-  .experience__capabilities {
-    margin-top: clamp(2.5rem, 5vw, 3.5rem);
-  }
-
-  .experience__capabilities .capability-grid {
-    margin-top: 1.5rem;
-  }
 </style>

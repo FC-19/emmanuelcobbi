@@ -4,16 +4,16 @@ import { assets } from "../content/assets";
 import { book } from "../content/site";
 ---
 
-<section class="section section--blue" id="book" data-theme="blue">
+<section class="section section--blue book-section" id="book" data-theme="blue">
   <div class="shell book-feature">
     <div class="book-feature__art" data-reveal>
-      <Image
-        src={assets.bookMockup.src}
-        alt={assets.bookMockup.alt}
-        widths={[320, 480, 720]}
-        sizes="(min-width: 900px) 23rem, 70vw"
-        loading="lazy"
-      />
+        <Image
+          src={assets.bookMockup.src}
+          alt={assets.bookMockup.alt}
+          widths={[240, 360, 520]}
+          sizes="(min-width: 900px) 17rem, 58vw"
+          loading="lazy"
+        />
     </div>
 
     <div class="book-feature__text" data-reveal style="--reveal-delay:0.1s">
@@ -21,7 +21,7 @@ import { book } from "../content/site";
       <h2 class="display-2 book-feature__title">
         {book.title.split("\n").map((line) => <span class="book-feature__line">{line}</span>)}
       </h2>
-      <p class="book-feature__name">{book.name}</p>
+      <p class="book-feature__name">Emmanuel Cobbi · Author</p>
       <p class="book-feature__subtitle">{book.subtitle}</p>
       <p class="book-feature__body">{book.description}</p>
       <div class="actions book-feature__actions">
@@ -33,6 +33,27 @@ import { book } from "../content/site";
 </section>
 
 <style>
+  .book-section {
+    padding-block: clamp(3.5rem, 6vw, 5.5rem);
+  }
+
+  .book-section :global(.book-feature) {
+    display: grid;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .book-feature__art {
+    width: min(100%, 17rem);
+    justify-self: center;
+  }
+
+  .book-feature__art img {
+    width: 100%;
+    height: auto !important;
+    object-fit: contain;
+  }
+
   .book-feature__line {
     display: block;
   }
@@ -42,11 +63,11 @@ import { book } from "../content/site";
   }
 
   .book-feature__name {
-    margin-top: 2rem;
+    margin-top: 1.2rem;
     font-family: var(--font-display);
     font-size: clamp(1.35rem, 2.6vw, 1.85rem);
     letter-spacing: -0.02em;
-    color: var(--yellow);
+    color: #f7f7f7;
   }
 
   .book-feature__subtitle {
@@ -57,7 +78,7 @@ import { book } from "../content/site";
   }
 
   .book-feature__body {
-    margin-top: 1.5rem;
+    margin-top: 1.1rem;
     font-size: 1.05rem;
     line-height: 1.7;
     color: rgba(255, 255, 255, 0.86);
@@ -73,5 +94,11 @@ import { book } from "../content/site";
     font-size: 0.85rem;
     color: rgba(255, 255, 255, 0.6);
     max-width: 44ch;
+  }
+
+  @media (min-width: 800px) {
+    .book-section :global(.book-feature) {
+      grid-template-columns: minmax(14rem, 0.5fr) minmax(22rem, 1fr);
+    }
   }
 </style>

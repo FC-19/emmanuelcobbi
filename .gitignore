@@ -4,5 +4,7 @@ dist/
 .DS_Store
 *.log
 _shots/
+_captures/
+_cap.mjs
 _probe*.mjs
 _served.html

@@ -1,165 +1,336 @@
 ---
-import { Image } from "astro:assets";
-import { assets } from "../content/assets";
-import { hero, profile } from "../content/site";
+import { hero } from "../content/site";
 ---
 
-<section class="hero" id="top" data-theme="red">
-  <div class="hero__floats">
-    <figure class="float float--book">
-      <span class="float__frame" style="--rot:-7deg;--bob-duration:11s">
-        <Image
-          src={assets.bookMockup.src}
-          alt={assets.bookMockup.alt}
-          widths={[180, 280, 360]}
-          sizes="(min-width: 1280px) 152px, (min-width: 1024px) 128px, 1px"
-          loading="eager"
-        />
-      </span>
-    </figure>
-
-    <figure class="float float--talk">
-      <span class="float__frame" style="--rot:4deg;--bob-duration:13s;--bob-delay:-3s">
-        <Image
-          src={assets.eventTalkWide.src}
-          alt={assets.eventTalkWide.alt}
-          widths={[260, 400, 520]}
-          sizes="(min-width: 1024px) 208px, 1px"
-          loading="lazy"
-        />
-      </span>
-    </figure>
-
-    <figure class="float float--tribe">
-      <span class="float__frame" style="--rot:4deg;--bob-duration:12s;--bob-delay:-6s">
-        <Image
-          src={assets.tribeWeb.src}
-          alt={assets.tribeWeb.alt}
-          widths={[330, 500, 660]}
-          sizes="(min-width: 1280px) 272px, (min-width: 1024px) 224px, 1px"
-          loading="eager"
-        />
-      </span>
-    </figure>
-
-    <figure class="float float--banner">
-      <span class="float__frame" style="--rot:-5deg;--bob-duration:10s;--bob-delay:-8s">
-        <Image
-          src={assets.eventBanner.src}
-          alt={assets.eventBanner.alt}
-          widths={[180, 280, 360]}
-          sizes="(min-width: 1024px) 136px, 120px"
-          loading="lazy"
-        />
-      </span>
-    </figure>
+<section class="hero" id="top" data-theme="cream" data-hero-stage>
+  <div class="hero__kinetic" aria-hidden="true">
+    <span class="hero__aura"></span>
+    <i class="hero__orbit hero__orbit--large"></i>
+    <i class="hero__orbit hero__orbit--small"></i>
+    <i class="hero__orbit-dot"></i>
   </div>
-
   <div class="shell hero__inner">
-    <div class="hero__copy">
-      <p class="eyebrow">{hero.eyebrow}</p>
-      <h1 class="hero-title hero__title">
-        {hero.titleLines.map((line) => <span>{line}</span>)}
-      </h1>
-      <p class="hero__lede">{hero.lede}</p>
-      <div class="actions hero__actions">
-        <a class="pill pill--light" href={hero.primary.href}>{hero.primary.label}</a>
-        <a class="pill pill--ghost" href={hero.secondary.href}>{hero.secondary.label}</a>
-      </div>
-      <p class="hero__status">
-        <Image
-          src={assets.tribeIcon.src}
-          alt=""
-          widths={[44, 88]}
-          sizes="22px"
-          aria-hidden="true"
-        />
-        <span>{hero.status}</span>
-      </p>
+    <p class="eyebrow hero__eyebrow">{hero.eyebrow}</p>
+    <h1 class="hero-title hero__title">
+      {hero.titleLines.map((line, index) => <span class:list={[index === 1 && "hero__soft"]}>{line}</span>)}
+    </h1>
+    <p class="hero__lede">{hero.lede}</p>
+    <div class="actions hero__actions">
+      <a class="pill pill--ink" href={hero.primary.href}>{hero.primary.label}</a>
+      <a class="pill pill--ghost" href={hero.secondary.href}>{hero.secondary.label}</a>
     </div>
-
-    <div class="hero__figure">
-      <p class="hero__portrait-caption">{profile.name} — {profile.location}</p>
-      <Image
-        class="hero__portrait"
-        src={assets.portraitHero.src}
-        alt={assets.portraitHero.alt}
-        widths={[420, 640, 900, 1086]}
-        sizes="(min-width: 1024px) 27rem, (min-width: 640px) 24rem, 82vw"
-        loading="eager"
-        fetchpriority="high"
-      />
-    </div>
+    <p class="hero__status">
+      <span class="hero__status-dot" aria-hidden="true"></span>
+      {hero.status}
+    </p>
   </div>
 </section>
 
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    {
+      [0, 1].map(() => (
+        <div class="marquee__group">
+          {hero.marquee.map((item) => (
+            <>
+              <span class="marquee__item">{item}</span>
+              <span class="marquee__dot"></span>
+            </>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>
+
 <style>
-  /* Frames bleed off the outer edges and sit in the bands the reading column
-     leaves free: above the eyebrow, below the status line, and past the
-     portrait on the right. */
-  .float--book {
-    top: 4%;
-    left: -3%;
-    width: 9.5rem;
+  .hero {
+    --spot-x: 50%;
+    --spot-y: 38%;
+    position: relative;
+    overflow: hidden;
+    background: var(--paper);
+    color: var(--ink);
+    padding-top: clamp(8rem, 13vw, 11rem);
   }
 
-  .float--tribe {
-    top: 11%;
-    right: -6%;
-    width: 17rem;
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 5rem 0 auto;
+    height: 70%;
+    opacity: 0.48;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 50% 25%, rgba(0, 0, 0, 0.065), transparent 38%),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.055) 1px, transparent 1px),
+      linear-gradient(rgba(0, 0, 0, 0.055) 1px, transparent 1px);
+    background-size: auto, 64px 64px, 64px 64px;
+    mask-image: radial-gradient(ellipse at center, #000, transparent 70%);
   }
 
-  .float--talk {
-    bottom: -2%;
-    left: -1%;
-    width: 13rem;
+  .hero__kinetic {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
   }
 
-  .float--banner {
-    bottom: 3%;
-    right: 1%;
-    width: 8.5rem;
+  .hero__aura {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle 24rem at var(--spot-x) var(--spot-y),
+      rgba(0, 0, 0, 0.075),
+      transparent 72%
+    );
+    transition: background 120ms linear;
   }
 
-  @media (min-width: 1024px) and (max-width: 1279px) {
-    .float--tribe {
-      width: 14rem;
-      right: -9%;
+  .hero__orbit {
+    position: absolute;
+    display: block;
+    border: 1px solid rgba(20, 20, 20, 0.14);
+    border-radius: 50%;
+    animation: hero-orbit 26s linear infinite;
+  }
+
+  .hero__orbit::before,
+  .hero__orbit::after {
+    content: "";
+    position: absolute;
+    width: 0.48rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .hero__orbit::before {
+    top: 8%;
+    left: 22%;
+  }
+
+  .hero__orbit::after {
+    right: 3%;
+    bottom: 23%;
+    width: 0.3rem;
+    opacity: 0.5;
+  }
+
+  .hero__orbit--large {
+    top: 18%;
+    right: 6%;
+    width: min(24vw, 20rem);
+    aspect-ratio: 1;
+  }
+
+  .hero__orbit--small {
+    bottom: 17%;
+    left: 7%;
+    width: min(14vw, 10rem);
+    aspect-ratio: 1;
+    border-style: dashed;
+    opacity: 0.55;
+    animation-direction: reverse;
+    animation-duration: 18s;
+  }
+
+  .hero__orbit-dot {
+    position: absolute;
+    top: calc(18% + min(12vw, 10rem));
+    right: calc(6% + min(12vw, 10rem) - 0.3rem);
+    width: 0.6rem;
+    aspect-ratio: 1;
+    border: 1px solid rgba(20, 20, 20, 0.25);
+    border-radius: 50%;
+    background: var(--paper);
+    animation: hero-signal 5s ease-in-out infinite;
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: clamp(5rem, 9vw, 8rem);
+    text-align: center;
+  }
+
+  .hero.hero .hero__eyebrow {
+    color: #5f5f5f;
+    opacity: 0;
+    animation: hero-fade 0.7s 0.15s var(--ease) forwards;
+  }
+
+  .hero__title {
+    max-width: 1080px;
+    margin-top: 1.2rem;
+    font-size: clamp(3.3rem, 7.2vw, 7rem);
+    font-weight: 500;
+    letter-spacing: -0.055em;
+    line-height: 0.98;
+  }
+
+  .hero__title span {
+    display: block;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(105%);
+    animation: hero-word 1s var(--ease) forwards;
+  }
+
+  .hero__title span:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+
+  .hero__title span:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+
+  .hero.hero .hero__title .hero__soft {
+    color: #8a8a8a;
+  }
+
+  .hero.hero .hero__lede {
+    max-width: 600px;
+    margin-top: 2rem;
+    color: #444;
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    line-height: 1.7;
+    opacity: 0;
+    animation: hero-fade 0.8s 0.45s var(--ease) forwards;
+  }
+
+  .hero.hero .hero__actions {
+    justify-content: center;
+    margin-top: 1.7rem;
+    opacity: 0;
+    animation: hero-fade 0.8s 0.6s var(--ease) forwards;
+  }
+
+  .hero__actions .pill {
+    min-height: 3.2rem;
+    padding-inline: 1.65rem;
+  }
+
+  .hero.hero .hero__actions .pill--ghost {
+    border-color: #141414;
+    color: #141414;
+  }
+
+  .hero.hero .hero__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-top: 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+    color: #555;
+  }
+
+  .hero__status-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: #111;
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.28);
+    animation: status-pulse 2s ease-out infinite;
+  }
+
+  .marquee.marquee {
+    border-color: var(--line);
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .marquee.marquee .marquee__dot {
+    background: currentColor;
+  }
+
+  @keyframes hero-word {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes hero-fade {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes status-pulse {
+    70% {
+      box-shadow: 0 0 0 8px rgba(0, 0, 0, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
+  }
+
+  @keyframes hero-orbit {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  @keyframes hero-signal {
+    50% {
+      transform: scale(0.55);
+      opacity: 0.35;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .hero__orbit--large {
+      top: 12%;
+      right: -7%;
+      width: 15rem;
+      opacity: 0.55;
     }
 
-    .float--book {
-      width: 8rem;
+    .hero__orbit--small {
+      display: none;
     }
-  }
 
-  /* On a short viewport the lower band disappears so nothing crowds the
-     buttons or the status line. */
-  @media (min-width: 1024px) and (max-height: 780px) {
-    .float--talk {
+    .hero__orbit-dot {
       display: none;
     }
   }
 
-  /* Below the desktop breakpoint the frames would crowd the reading column,
-     so only two remain and they sit in the top and bottom bands. */
-  @media (max-width: 1023px) {
-    .float--book,
-    .float--talk,
-    .float--tribe {
-      display: none;
+  @media (max-width: 600px) {
+    .hero {
+      padding-top: 7.5rem;
     }
 
-    .float--banner {
-      bottom: 1.5rem;
-      right: 0.75rem;
-      width: 7.5rem;
-      opacity: 0.5;
+    .hero__title {
+      font-size: clamp(2.9rem, 13vw, 4.5rem);
     }
+
+    .hero__inner {
+      padding-bottom: 5.5rem;
+    }
+
   }
 
-  @media (max-width: 640px) {
-    .float--banner {
-      display: none;
+  @media (prefers-reduced-motion: reduce) {
+    .hero.hero .hero__title span,
+    .hero.hero .hero__eyebrow,
+    .hero.hero .hero__lede,
+    .hero.hero .hero__actions,
+    .hero.hero .hero__status-dot {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+
+    .hero__orbit,
+    .hero__orbit-dot {
+      animation: none;
     }
   }
 </style>

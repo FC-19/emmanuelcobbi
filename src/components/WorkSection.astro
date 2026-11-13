@@ -2,199 +2,519 @@
 import { Image } from "astro:assets";
 import { assets } from "../content/assets";
 import { work, archive, teaching } from "../content/site";
+
+const filters = ["All", "Product", "Websites", "Writing"] as const;
 ---
 
-<section class="section section--cream" id="work" data-theme="cream">
+<section class="section section--ink project-work" id="work" data-theme="ink">
   <div class="shell">
-    <div class="work__head" data-reveal>
-      <p class="eyebrow">Selected work</p>
-      <h2 class="display-2 work__title">Projects I have built, shaped, or written into.</h2>
-      <p class="lede work__lede">
-        Two things take most of my time now: Tribe, and the technology and editorial work
-        behind Bonteh Magazine. Everything else here is real work from the years before.
-      </p>
+    <div class="project-work__head" data-reveal>
+      <div>
+        <p class="eyebrow">Selected work</p>
+        <h2 class="display-1 project-work__title">Selected work<span>.</span></h2>
+      </div>
+
+      <div class="project-filters" role="group" aria-label="Filter selected work">
+        {
+          filters.map((filter, index) => (
+            <button
+              type="button"
+              class:list={[index === 0 && "is-active"]}
+              data-work-filter={filter}
+              aria-pressed={index === 0 ? "true" : "false"}
+            >
+              {filter}
+            </button>
+          ))
+        }
+      </div>
     </div>
 
-    <div class="work__rows">
+    <div class="project-grid" data-work-grid>
       {
         work.map((item, index) => {
           const media = item.assetKey ? assets[item.assetKey] : null;
+          const cardCategories = item.categories.join(" ");
           return (
-            /* The row is not itself a link: it contains an outbound link, and
-               nesting anchors is invalid. The case-study link is stretched
-               across the row instead, with the outbound link layered above. */
-            <div class:list={["work-row", index % 2 === 1 && "work-row--flip"]} data-reveal>
-              <div class="work-row__text">
-                <h3 class="work-row__title">
-                  {item.caseStudy
-                    ? <a class="work-row__link" href={item.caseStudy}>{item.name}</a>
-                    : item.name}
+            <article
+              class:list={[
+                "project-card",
+                index % 2 === 0 ? "project-card--dark" : "project-card--light",
+                index % 2 === 1 && "project-card--flip",
+              ]}
+              data-work-card
+              data-work-category={cardCategories}
+              data-reveal
+            >
+              <div class="project-card__copy">
+                <div class="project-card__tags">
+                  <span>{item.categories.includes("Product") ? "Product" : item.categories[0]}</span>
+                  <span>{item.role}</span>
+                </div>
+                <h3 class="project-card__title">
+                  {
+                    item.caseStudy ? (
+                      <a href={item.caseStudy}>
+                        {item.name}
+                        <span class="sr-only"> — view case study</span>
+                      </a>
+                    ) : (
+                      item.name
+                    )
+                  }
                 </h3>
-                <p class="work-row__meta">
-                  {item.role}
-                  {item.archived ? " · Archived" : ""}
-                </p>
-                <p class="work-row__body">{item.summary}</p>
-                <div class="work__links">
-                  {item.href && (
-                    <a class="arrow-link" href={item.href} rel="noopener">
-                      {item.hrefLabel ?? "Visit"} <span aria-hidden="true">↗</span>
-                    </a>
-                  )}
+                <p class="project-card__summary">{item.summary}</p>
+                <div class="project-card__footer">
+                  {
+                    item.href ? (
+                      <a href={item.href} rel="noopener">
+                        {item.hrefLabel ?? "Visit project"} <span aria-hidden="true">↗</span>
+                      </a>
+                    ) : null
+                  }
                   {item.caseStudy && (
-                    <span class="arrow-link work__case">
-                      Inside the project <span aria-hidden="true">→</span>
-                    </span>
+                    <a class="project-card__case" href={item.caseStudy}>
+                      <span>Read the case study</span>
+                      <i aria-hidden="true">→</i>
+                    </a>
                   )}
                 </div>
               </div>
+
               {media && (
-                <div class="work-row__media">
-                  <span class="media-frame tilt" style="--rot:-1.4deg">
-                    <Image
-                      src={media.src}
-                      alt={media.alt}
-                      widths={[560, 840, 1120]}
-                      sizes="(min-width: 900px) 34rem, 92vw"
-                      loading="lazy"
-                    />
+                <div class="project-card__visual" data-work-media>
+                  <span class="project-card__webframe" aria-hidden="true">
+                    <i></i><i></i><i></i>
                   </span>
+                  <Image
+                    src={media.src}
+                    alt={media.alt}
+                    widths={[640, 960, 1280]}
+                    sizes="(min-width: 1000px) 48rem, 94vw"
+                    loading={index === 0 ? "eager" : "lazy"}
+                  />
                 </div>
               )}
-            </div>
+            </article>
           );
         })
       }
     </div>
 
-    <div class="work__archive" data-reveal>
-      <h3 class="display-3 work__archive-title">Earlier and archived work</h3>
-      <p class="work__archive-note">
-        Some of these sites are no longer online and their domains have expired. They are
-        listed as real past work, without links that would send you somewhere unrelated.
-      </p>
-      <ul class="archive-list">
+    <p class="project-work__empty" data-work-empty hidden>No projects in this category yet.</p>
+
+    <div class="project-work__archive" data-reveal>
+      <div>
+        <p class="eyebrow">Earlier and archived</p>
+        <h3 class="display-2">More work, still part of the story.</h3>
+        <p class="project-work__stat">{teaching.note}</p>
+      </div>
+      <ul class="archive-grid">
         {
           archive.map((item) => (
             <li>
-              <span class="archive-list__name">{item.name}</span>
-              <span class="archive-list__note">{item.note}</span>
+              <span>{item.name}</span>
+              <p>{item.note}</p>
             </li>
           ))
         }
       </ul>
     </div>
 
-    <div class="work__teaching card" data-reveal>
-      <p class="eyebrow">{teaching.eyebrow}</p>
-      <h3 class="display-3 mt-1">{teaching.title}</h3>
-      <p class="work__teaching-body">{teaching.body}</p>
-      <a class="arrow-link mt-1" href={teaching.cta.href} rel="noopener">
-        {teaching.cta.label} <span aria-hidden="true">↗</span>
-      </a>
-    </div>
-
-    <div class="work__strip" data-reveal>
-      <h3 class="eyebrow">Out in the field</h3>
-      <div class="strip">
-        {
-          [
-            assets.eventBanner,
-            assets.eventTable,
-            assets.eventAudience,
-            assets.eventStand,
-            assets.eventPortrait,
-            assets.eventTalkWide,
-          ].map((item) => (
-            <figure class="media-frame tilt" style="--rot:-1.5deg">
-              <Image
-                src={item.src}
-                alt={item.alt}
-                widths={[320, 560]}
-                sizes="272px"
-                loading="lazy"
-              />
-            </figure>
-          ))
-        }
+    <div class="teaching-panel" data-reveal>
+      <div>
+        <p class="eyebrow">{teaching.eyebrow}</p>
+        <h3 class="display-2">{teaching.title}</h3>
+      </div>
+      <div>
+        <p>{teaching.body}</p>
+        <a class="pill pill--ink" href={teaching.cta.href} rel="noopener">
+          {teaching.cta.label} <span aria-hidden="true">↗</span>
+        </a>
       </div>
     </div>
   </div>
 </section>
 
 <style>
-  .work__head {
-    max-width: 46rem;
+  .project-work {
+    overflow: hidden;
   }
 
-  .work__title {
-    margin-top: 1rem;
-  }
-
-  .work__lede {
-    margin-top: 1.4rem;
-    max-width: 46ch;
-  }
-
-  .work__rows {
-    margin-top: clamp(2.5rem, 5vw, 4rem);
-  }
-
-  .work__links {
+  .project-work__head {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.25rem;
-    margin-top: 1.5rem;
-    align-items: center;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
   }
 
-  .work__case {
+  .project-work__title {
+    margin-top: 0.75rem;
+  }
+
+  .project-work__title span {
+    color: #777;
+  }
+
+  .project-filters {
+    display: flex;
+    max-width: 100%;
+    gap: 0.35rem;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.35rem;
+    background: rgba(255, 255, 255, 0.04);
+    scrollbar-width: none;
+  }
+
+  .project-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .project-filters button {
+    flex: none;
+    border: 0;
+    border-radius: 999px;
+    padding: 0.65rem 1rem;
+    background: transparent;
+    color: #bdbdbd;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    cursor: pointer;
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease;
+  }
+
+  .project-filters button:hover,
+  .project-filters button.is-active {
+    background: #f7f7f7;
+    color: #141414;
+  }
+
+  .project-grid {
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    margin-top: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .project-card {
+    --mx: 50%;
+    --my: 50%;
+    --rx: 0deg;
+    --ry: 0deg;
+    display: grid;
+    min-height: 33rem;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    isolation: isolate;
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s var(--ease);
+  }
+
+  .project-card[hidden] {
+    display: none;
+  }
+
+  .project-card--dark {
+    background: #151515;
+    color: #f7f7f7;
+  }
+
+  .project-card--light {
+    background: #f3f3f3;
+    color: #141414;
+  }
+
+  .project-card__copy {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(1.7rem, 4vw, 3.5rem);
+  }
+
+  .project-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .project-card__tags span {
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    padding: 0.34rem 0.78rem;
+    font-size: 0.66rem;
+    opacity: 0.72;
+  }
+
+  .project-card__tags span:first-child {
+    background: currentColor;
+    color: #141414;
+    opacity: 1;
+  }
+
+  .project-card--light .project-card__tags span:first-child {
+    background: #141414;
+    color: #fff;
+  }
+
+  .project-card__title {
+    max-width: 10ch;
+    margin-top: 1.6rem;
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    font-weight: 500;
+    letter-spacing: -0.065em;
+  }
+
+  .project-card__title a {
+    text-decoration: none;
+  }
+
+  .project-card__title a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .project-card__summary {
+    max-width: 35ch;
+    margin-top: 1.25rem;
+    color: inherit;
+    font-size: clamp(0.96rem, 1.3vw, 1.1rem);
+    line-height: 1.65;
+    opacity: 0.74;
+  }
+
+  .project-card__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .project-card__footer > a {
+    position: relative;
+    z-index: 3;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-underline-offset: 0.25em;
+  }
+
+  .project-card__case {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+  }
+
+  .project-card__case i {
+    display: grid;
+    width: 2.65rem;
+    aspect-ratio: 1;
+    place-items: center;
+    border-radius: 50%;
+    background: #f7f7f7;
+    color: #141414;
+    font-style: normal;
+    transition: transform 0.3s var(--ease);
+  }
+
+  .project-card--light .project-card__case i {
+    background: #141414;
+    color: #fff;
+  }
+
+  .project-card:hover .project-card__case i {
+    transform: translateX(0.25rem);
+  }
+
+  .project-card__visual {
+    position: relative;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 20rem;
+    overflow: hidden;
+    padding: clamp(1.3rem, 3vw, 2.6rem);
+    background:
+      radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.11), transparent 34%),
+      #0b0b0b;
+    perspective: 1200px;
+  }
+
+  .project-card--light .project-card__visual {
+    background:
+      radial-gradient(circle at 70% 20%, rgba(20, 20, 20, 0.06), transparent 34%),
+      #dedede;
+  }
+
+  .project-card__visual img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-height: 31rem;
+    border-radius: 8px;
+    object-fit: cover;
+    object-position: top;
+    box-shadow: 0 34px 70px -32px rgba(0, 0, 0, 0.8);
+    transform: rotateX(var(--rx)) rotateY(var(--ry));
+    transition: transform 0.55s var(--ease);
+  }
+
+  .project-card__webframe {
+    position: absolute;
+    z-index: 0;
+    top: 14%;
+    right: 7%;
+    width: 8rem;
+    height: 74%;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 22px;
+    background: #1b1b1b;
+    transform: rotate(7deg);
+  }
+
+  .project-card--light .project-card__webframe {
+    border-color: rgba(20, 20, 20, 0.12);
+    background: #c8c8c8;
+  }
+
+  .project-card__webframe i {
+    display: block;
+    width: 35%;
+    height: 2px;
+    margin: 0.65rem auto;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, 0.28);
+  }
+
+  .project-work__empty {
+    margin-top: 2rem;
+    font-family: var(--font-mono);
     color: var(--muted);
   }
 
-  .work__archive {
-    margin-top: clamp(3rem, 6vw, 5rem);
+  .project-work__archive {
+    display: grid;
+    gap: 2rem;
+    margin-top: clamp(4rem, 8vw, 7rem);
     padding-top: 2rem;
     border-top: 1px solid var(--line);
   }
 
-  .work__archive-title {
-    margin-top: 0;
+  .project-work__archive h3 {
+    max-width: 11ch;
+    margin-top: 0.75rem;
   }
 
-  .work__archive-note {
-    margin-top: 0.85rem;
-    max-width: 58ch;
-    font-size: 0.95rem;
-    color: var(--muted);
-  }
-
-  .archive-list {
-    margin-top: 1.75rem;
-  }
-
-  .work__teaching {
-    margin-top: clamp(3rem, 6vw, 4.5rem);
-    max-width: 44rem;
-    padding: clamp(1.5rem, 3vw, 2.25rem);
-  }
-
-  .work__teaching-body {
+  .project-work__stat {
+    max-width: 44ch;
     margin-top: 1rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    line-height: 1.7;
+  }
+
+  .archive-grid {
+    display: grid;
+    gap: 1rem;
+    list-style: none;
+  }
+
+  .archive-grid li {
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .archive-grid span {
     font-size: 1rem;
-    line-height: 1.68;
-    color: rgba(20, 18, 17, 0.76);
+    font-weight: 600;
   }
 
-  .work__strip {
-    margin-top: clamp(3rem, 6vw, 4.5rem);
+  .archive-grid p {
+    margin-top: 0.45rem;
+    color: var(--muted);
+    font-size: 0.86rem;
   }
 
-  .work__strip .strip {
-    margin-top: 1.25rem;
+  .teaching-panel {
+    display: grid;
+    gap: 2rem;
+    margin-top: clamp(4rem, 8vw, 7rem);
+    border-radius: 24px;
+    padding: clamp(2rem, 5vw, 4rem);
+    background: #f3f3f3;
+    color: #141414;
   }
 
-  .work__strip figure {
-    margin: 0;
+  .teaching-panel h3 {
+    margin-top: 0.75rem;
+  }
+
+  .teaching-panel > div:last-child {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .teaching-panel > div:last-child > p {
+    max-width: 49ch;
+    color: #4a4a4a;
+    line-height: 1.7;
+  }
+
+  .teaching-panel .pill {
+    margin-top: 1.5rem;
+  }
+
+  @media (min-width: 800px) {
+    .project-work__archive,
+    .teaching-panel {
+      grid-template-columns: minmax(16rem, 0.85fr) minmax(20rem, 1.15fr);
+    }
+
+    .archive-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: start;
+    }
+
+    .archive-grid li {
+      border-top: 1px solid var(--line);
+      border-bottom: 0;
+      padding-top: 1rem;
+    }
+  }
+
+  @media (min-width: 980px) {
+    .project-card {
+      grid-template-columns: minmax(20rem, 0.86fr) minmax(28rem, 1.14fr);
+    }
+
+    .project-card--flip .project-card__copy {
+      grid-column: 2;
+    }
+
+    .project-card--flip .project-card__visual {
+      grid-column: 1;
+      grid-row: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-card__visual img {
+      transform: none;
+    }
   }
 </style>

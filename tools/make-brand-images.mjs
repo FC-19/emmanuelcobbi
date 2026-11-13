@@ -36,7 +36,7 @@ await icon.setViewport({ width: 180, height: 180, deviceScaleFactor: 1 });
 await icon.setContent(
   `<html><body style="margin:0">
      <svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 64 64">
-       <rect width="64" height="64" rx="14" fill="#E20000"/>
+       <rect width="64" height="64" rx="14" fill="#141414"/>
        <text x="32" y="41.5" text-anchor="middle" font-family="Helvetica, Arial, sans-serif"
          font-size="27" font-weight="500" letter-spacing="-1" fill="#FFFFFF">EC</text>
      </svg>

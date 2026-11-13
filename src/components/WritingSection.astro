@@ -1,60 +1,213 @@
 ---
-import { articles } from "../content/site";
+import { articles, socialPosts, links } from "../content/site";
 import ArticleRow from "./ArticleRow.astro";
+
+const featuredArticles = articles.slice(0, 4);
 ---
 
-<section class="section section--paper" id="writing" data-theme="paper">
+<section class="section writing-section" id="writing" data-theme="paper">
   <div class="shell">
-    <div class="writing__head" data-reveal>
-      <p class="eyebrow">Writing</p>
-      <h2 class="display-2 writing__title">
-        Essays about the systems shaping everyday life.
-      </h2>
-      <p class="lede writing__lede">
-        I write for Bonteh Magazine about business, technology, and policy — usually
-        starting from something concrete happening in Cameroon or across Africa.
+    <div class="writing-section__head" data-reveal>
+      <div>
+        <p class="eyebrow">Writing</p>
+        <h2 class="display-1">Words that travel<span>.</span></h2>
+      </div>
+      <p>
+        Published analysis for Bonteh Magazine, alongside the short essays and reflections
+        that have built a community around my work on social media.
       </p>
     </div>
 
-    <div class="writing__list">
-      {
-        articles.map((article) => (
-          <div data-reveal>
-            <ArticleRow article={article} />
+    <div class="writing-section__layout">
+      <div class="social-writing" data-reveal>
+        <div class="social-writing__head">
+          <div>
+            <p class="eyebrow">From social</p>
+            <h3 class="display-2">The conversations people share.</h3>
           </div>
-        ))
-      }
-    </div>
+          <a href={links.facebook} target="_blank" rel="me noopener noreferrer">
+            Follow on Facebook <span aria-hidden="true">↗</span>
+          </a>
+        </div>
 
-    <div class="writing__actions" data-reveal>
-      <a class="pill pill--ink" href="/writing">See all published writing</a>
+        <div class="social-writing__posts">
+          {
+            socialPosts.map((post, index) => (
+              <a href={post.href} target="_blank" rel="me noopener noreferrer" data-post>
+                <span class="social-writing__index">0{index + 1}</span>
+                <span class="social-writing__copy">
+                  <strong>{post.title}</strong>
+                  <span>{post.excerpt}</span>
+                </span>
+                <span class="social-writing__go" aria-hidden="true">↗</span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="published-writing" data-reveal style="--reveal-delay:0.08s">
+        <div class="published-writing__head">
+          <div>
+            <p class="eyebrow">Published</p>
+            <h3 class="display-3">Bonteh Magazine</h3>
+          </div>
+          <a href={links.bonteh} rel="noopener">Visit the publication ↗</a>
+        </div>
+
+        <div class="published-writing__list">
+          {featuredArticles.map((article) => <ArticleRow article={article} showSource={false} />)}
+        </div>
+
+        <a class="pill pill--ink" href="/writing">Read all published writing</a>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-  .writing__head {
-    max-width: 44rem;
+  .writing-section {
+    overflow: hidden;
   }
 
-  .writing__title {
-    margin-top: 1rem;
+  .writing-section__head {
+    display: grid;
+    gap: 1.5rem 4rem;
+    align-items: end;
   }
 
-  .writing__lede {
-    margin-top: 1.4rem;
-    max-width: 48ch;
+  .writing-section__head h2 {
+    margin-top: 0.75rem;
   }
 
-  .writing__list {
-    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  .writing-section__head h2 span {
+    color: var(--faint);
   }
 
-  .writing__list > :last-child {
+  .writing-section__head > p {
+    max-width: 44ch;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .writing-section__layout {
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .social-writing {
+    overflow: hidden;
+    border-radius: 24px;
+    padding: clamp(1.5rem, 4vw, 2.7rem);
+    background: #121212;
+    color: #f7f7f7;
+  }
+
+  .social-writing__head,
+  .published-writing__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .social-writing__head h3 {
+    max-width: 11ch;
+    margin-top: 0.75rem;
+  }
+
+  .social-writing__head > a,
+  .published-writing__head > a {
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    color: #c2c2c2;
+    text-underline-offset: 0.25em;
+  }
+
+  .social-writing__posts {
+    margin-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
+  .social-writing__posts a {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+    gap: 0.9rem;
+    align-items: start;
+    padding: 1.15rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    color: inherit;
+    text-decoration: none;
+    transition:
+      padding 0.3s var(--ease),
+      background-color 0.3s ease;
+  }
+
+  .social-writing__posts a:hover {
+    padding-inline: 0.75rem;
+    background: rgba(255, 255, 255, 0.035);
+  }
+
+  .social-writing__index,
+  .social-writing__go {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: #777;
+  }
+
+  .social-writing__copy {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .social-writing__copy strong {
+    font-family: var(--font-display);
+    font-size: clamp(1.05rem, 2vw, 1.35rem);
+    font-weight: 520;
+    letter-spacing: -0.025em;
+  }
+
+  .social-writing__copy > span {
+    max-width: 52ch;
+    color: #a8a8a8;
+    font-size: 0.85rem;
+    line-height: 1.65;
+  }
+
+  .published-writing {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: clamp(1.5rem, 4vw, 2.7rem);
+    background: #f7f7f7;
+  }
+
+  .published-writing__list {
+    margin-top: 1.8rem;
+  }
+
+  .published-writing__list > :last-child {
     border-bottom: 1px solid var(--line);
   }
 
-  .writing__actions {
-    margin-top: 2.5rem;
+  .published-writing > .pill {
+    align-self: flex-start;
+    margin-top: 1.8rem;
+  }
+
+  @media (min-width: 760px) {
+    .writing-section__head {
+      grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
+    }
+  }
+
+  @media (min-width: 1040px) {
+    .writing-section__layout {
+      grid-template-columns: minmax(24rem, 0.92fr) minmax(28rem, 1.08fr);
+      align-items: stretch;
+    }
   }
 </style>

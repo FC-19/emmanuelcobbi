@@ -36,10 +36,24 @@ ROOT_CAPTURES = ROOT / "_captures"
 SRC_CAPTURE = {
     "tribe-web": ROOT_CAPTURES / "tribe-1440.png",
     "bonteh-web": ROOT_CAPTURES / "bonteh-1440.png",
+    "ciase-web": ROOT_CAPTURES / "ciase-1440.png",
 }
 
 # Emmanuel's own Tribe app interface design files.
 SRC_TRIBE_APP = Path("C:/Users/A3s/Documents/Tribe/Mobile UI/New folder/7.png")
+
+# Eight representative Tribe app screens for the gallery grid.
+TRIBE_SCREEN_DIR = Path("C:/Users/A3s/Documents/Tribe/Mobile UI/New folder")
+SRC_TRIBE_SCREENS = {
+    "tribe-personal": "1.png",
+    "tribe-vendor": "7.png",
+    "tribe-affiliate": "12.png",
+    "tribe-earnings": "14.png",
+    "tribe-wallet": "2.png",
+    "tribe-market": "3.png",
+    "tribe-orders": "8.png",
+    "tribe-tia": "11.png",
+}
 
 
 def trimmed(im: Image.Image, pad: int = 0) -> Image.Image:
@@ -135,6 +149,12 @@ def main() -> None:
     app = Image.open(SRC_TRIBE_APP).convert("RGB")
     app.thumbnail((720, 1600), Image.LANCZOS)
     save_jpg(app, "tribe-app-design.jpg", quality=84)
+
+    print("Tribe app screens")
+    for name, filename in SRC_TRIBE_SCREENS.items():
+        im = Image.open(TRIBE_SCREEN_DIR / filename).convert("RGB")
+        im.thumbnail((760, 1700), Image.LANCZOS)
+        save_jpg(im, f"{name}.jpg", quality=84)
 
     print("Live site captures")
     for name, path in SRC_CAPTURE.items():

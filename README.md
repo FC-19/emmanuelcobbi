@@ -1,7 +1,7 @@
 # Emmanuel Cobbi — personal website
 
 A static editorial portfolio for Emmanuel Cobbi: software developer, designer,
-author, and founder of Tribe.
+author, and founder of Triber.
 
 This is a standalone project. It lives beside the Tribe Remotion work in this
 workspace (`../tribe-promo`) and does not touch it.
@@ -48,10 +48,10 @@ full record in [`docs/asset-manifest.md`](docs/asset-manifest.md).
 
 | Route | What it is |
 | --- | --- |
-| `/` | The full editorial homepage: hero, about, Tribe, selected work, writing, book, experience, contact |
+| `/` | The full editorial homepage: hero, about, Triber, selected work, process, journal, writing, book, experience, contact |
 | `/about` | Expanded background and a readable professional profile |
 | `/writing` | Index of verified published writing |
-| `/work/tribe` | Tribe case study |
+| `/work/triber` | Triber case study |
 | `/work/bonteh-magazine` | Bonteh Magazine case study |
 | `/404` | Branded not-found page |
 

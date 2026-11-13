@@ -1,0 +1,262 @@
+---
+import { capabilities } from "../content/site";
+---
+
+<section class="section section--ink process" id="process" data-theme="ink">
+  <div class="shell">
+    <div class="process__head" data-reveal>
+      <div>
+        <p class="eyebrow">How I work</p>
+        <h2 class="display-2">Good products start before the pixels.</h2>
+      </div>
+      <p>
+        Every project moves through the same clear process: understand the constraint,
+        design the system, build the real thing, then ship and refine.
+      </p>
+    </div>
+
+    <div class="process__notes" data-process-notes>
+      {
+        capabilities.map((item, index) => (
+          <article class:list={["note", `note--${index + 1}`]} data-note data-reveal>
+            <span class="note__tape" aria-hidden="true"></span>
+            <button
+              type="button"
+              class="note__flip"
+              data-note-flip
+              aria-pressed="false"
+              aria-label={`Flip ${item.title} note`}
+            >
+              <span class="note__face note__front">
+                <small>0{index + 1}</small>
+                <strong>{item.title}</strong>
+                <span>{item.body}</span>
+                <em>Tap to see what this produces</em>
+              </span>
+              <span class="note__face note__back">
+                <small>What this produces</small>
+                <span>
+                  {item.gets.map((result) => (
+                    <i>{result}</i>
+                  ))}
+                </span>
+                <em>Tap to flip back</em>
+              </span>
+            </button>
+          </article>
+        ))
+      }
+    </div>
+
+    <div class="process__actions" data-reveal>
+      <button type="button" class="process__button process__button--light" data-process-shuffle>
+        Shuffle notes
+      </button>
+      <button type="button" class="process__button" data-process-flip-all>Flip all</button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .process {
+    overflow: hidden;
+  }
+
+  .process__head {
+    display: grid;
+    gap: 1.5rem 4rem;
+    align-items: end;
+  }
+
+  .process__head h2 {
+    max-width: 14ch;
+    margin-top: 0.75rem;
+  }
+
+  .process__head > p {
+    max-width: 40ch;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .process__notes {
+    display: grid;
+    gap: clamp(1.3rem, 3vw, 2rem);
+    margin-top: clamp(3rem, 6vw, 5rem);
+    perspective: 1400px;
+  }
+
+  .note {
+    position: relative;
+    min-height: 20rem;
+    padding-top: 0.7rem;
+    transform: rotate(-1.5deg);
+  }
+
+  .note:nth-child(2) {
+    transform: rotate(1.2deg) translateY(0.7rem);
+  }
+
+  .note:nth-child(3) {
+    transform: rotate(-0.7deg);
+  }
+
+  .note__tape {
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    left: 50%;
+    width: 32%;
+    height: 1.55rem;
+    transform: translateX(-50%) rotate(-1deg);
+    background: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(2px);
+  }
+
+  .note__flip {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 19rem;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: #171717;
+    text-align: left;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.65s var(--ease);
+  }
+
+  .note__flip[aria-pressed="true"] {
+    transform: rotateY(180deg);
+  }
+
+  .note__face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 2px;
+    padding: clamp(1.55rem, 3vw, 2.2rem);
+    background: #e9e9e9;
+    box-shadow: 0 20px 36px -20px rgba(0, 0, 0, 0.65);
+    backface-visibility: hidden;
+  }
+
+  .note--2 .note__face {
+    background: #d9d9d9;
+  }
+
+  .note--3 .note__face {
+    background: #f2f2f2;
+  }
+
+  .note__front small,
+  .note__back small {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #666;
+  }
+
+  .note__front strong {
+    margin-top: 2.2rem;
+    font-family: var(--font-hand);
+    font-size: clamp(2.8rem, 5vw, 4.2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+  }
+
+  .note__front > span {
+    max-width: 24ch;
+    margin-top: 1rem;
+    font-family: var(--font-hand);
+    font-size: clamp(1.2rem, 2vw, 1.55rem);
+    line-height: 1.35;
+  }
+
+  .note__face em {
+    margin-top: auto;
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    font-style: normal;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.55;
+  }
+
+  .note__back {
+    transform: rotateY(180deg);
+    background: #161616 !important;
+    color: #f7f7f7;
+  }
+
+  .note__back > span {
+    display: grid;
+    gap: 0.55rem;
+    margin-top: 2rem;
+  }
+
+  .note__back i {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    padding-bottom: 0.65rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 2.3vw, 1.7rem);
+    font-style: normal;
+    letter-spacing: -0.03em;
+  }
+
+  .process__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.65rem;
+    margin-top: 2.2rem;
+  }
+
+  .process__button {
+    min-height: 2.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.34);
+    border-radius: 999px;
+    padding: 0.65rem 1.3rem;
+    background: transparent;
+    color: #f7f7f7;
+    cursor: pointer;
+    transition:
+      transform 0.25s var(--ease),
+      background-color 0.25s ease;
+  }
+
+  .process__button:hover {
+    transform: translateY(-2px);
+  }
+
+  .process__button--light {
+    border-color: #f7f7f7;
+    background: #f7f7f7;
+    color: #141414;
+  }
+
+  @media (min-width: 760px) {
+    .process__head {
+      grid-template-columns: minmax(0, 1.2fr) minmax(16rem, 0.8fr);
+    }
+
+    .process__notes {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .note__flip {
+      transition: none;
+    }
+  }
+</style>

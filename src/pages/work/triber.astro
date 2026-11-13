@@ -1,21 +1,22 @@
 ---
 import { Image } from "astro:assets";
 import Base from "../../layouts/Base.astro";
+import ProjectScreens from "../../components/ProjectScreens.astro";
 import { assets } from "../../content/assets";
-import { tribe, links, profile } from "../../content/site";
+import { tribe, profile } from "../../content/site";
 ---
 
 <Base
-  title="Tribe — case study"
-  description="Inside Tribe: an AI-powered platform bringing business tools, commerce, and payments into one connected experience, with Tia on WhatsApp and the web."
-  path="/work/tribe"
+  title="Triber — case study"
+  description="Inside Triber: an AI-powered platform bringing business tools, commerce, and payments into one connected experience, with Tia on WhatsApp and the web. The new site is launching at usetriber.com."
+  path="/work/triber"
   ogType="article"
 >
   <section class="page-head" data-theme="cream">
     <div class="shell">
       <p class="eyebrow">Case study · Currently building</p>
       <h1 class="display-1 page-head__title">
-        Tribe helps people run business with less friction.
+        Triber helps people run business with less friction.
       </h1>
       <p class="page-head__lede">{tribe.description}</p>
       <dl class="case-meta">
@@ -25,11 +26,11 @@ import { tribe, links, profile } from "../../content/site";
         </div>
         <div>
           <dt>Status</dt>
-          <dd>Live, in active development</dd>
+          <dd>In active development</dd>
         </div>
         <div>
           <dt>Site</dt>
-          <dd><a class="inline-link" href={links.tribe} rel="noopener">usetribeapp.com</a></dd>
+          <dd>usetriber.com</dd>
         </div>
       </dl>
     </div>
@@ -47,7 +48,7 @@ import { tribe, links, profile } from "../../content/site";
             loading="eager"
           />
         </span>
-        <figcaption>Screenshot of usetribeapp.com, captured 11 October 2026.</figcaption>
+        <figcaption>Pre-rebrand Tribe product website, captured 11 October 2026. The Triber site is launching at usetriber.com.</figcaption>
       </figure>
 
       <div class="prose-block case-body">
@@ -60,9 +61,9 @@ import { tribe, links, profile } from "../../content/site";
           stitching it together.
         </p>
 
-        <h2>What Tribe is</h2>
+        <h2>What Triber is</h2>
         <p>
-          Tribe brings those pieces into one connected experience. Products and services,
+          Triber brings those pieces into one connected experience. Products and services,
           inventory, orders, payment links, invoices, receipts, and customer follow-ups sit
           together, so the state of the business is visible in one place instead of five.
         </p>
@@ -73,7 +74,7 @@ import { tribe, links, profile } from "../../content/site";
           on the web, so the conversation is available where the business already happens.
         </p>
         <p>
-          Alongside the business tools, Tribe covers everyday money — bills, reminders, and
+          Alongside the business tools, Triber covers everyday money — bills, reminders, and
           payments — and adds marketplace mechanics such as escrow-protected orders, where
           payment is released once delivery is confirmed. Affiliates can opt in to promote
           eligible products and earn commission on qualifying sales.
@@ -81,7 +82,7 @@ import { tribe, links, profile } from "../../content/site";
 
         <h2>My role</h2>
         <p>
-          I am Tribe's founder and software developer. That covers the shape of the product
+          I am Triber's founder and software developer. That covers the shape of the product
           — what it does, what it deliberately does not do yet — as well as the design and
           implementation work behind the interfaces people use.
         </p>
@@ -113,7 +114,7 @@ import { tribe, links, profile } from "../../content/site";
             />
           </span>
           <figcaption>
-            Tribe app interface design. Product design work with placeholder figures — not a
+            Triber app interface design. Product design work with placeholder figures — not a
             screenshot of a live build.
           </figcaption>
         </figure>
@@ -128,16 +129,97 @@ import { tribe, links, profile } from "../../content/site";
             />
           </span>
           <figcaption>
-            Showing Tribe at an exhibition — where most of the useful product feedback comes
+            Showing the product at an exhibition — where most of the useful product feedback comes
             from.
           </figcaption>
         </figure>
       </div>
 
+      <ProjectScreens
+        project="Triber"
+        eyebrow="Product gallery"
+        title="The whole product, screen by screen."
+        intro="The public site sets the promise. The app screens show the work underneath: money, business operations, commerce and the conversational layer that ties them together."
+        url="usetriber.com"
+        theme="cream"
+        feature={{
+          src: assets.tribeWeb.src,
+          alt: assets.tribeWeb.alt,
+          label: "Triber — product website",
+          detail: "Desktop · usetriber.com",
+          kind: "web",
+        }}
+        screens={[
+          {
+            src: assets.tribeLiveMobile.src,
+            alt: assets.tribeLiveMobile.alt,
+            label: "Website",
+            detail: "Mobile · live",
+            kind: "mobile",
+          },
+          {
+            src: assets.tribePersonal.src,
+            alt: assets.tribePersonal.alt,
+            label: "Personal",
+            detail: "Home · app",
+            kind: "mobile",
+          },
+          {
+            src: assets.tribeVendor.src,
+            alt: assets.tribeVendor.alt,
+            label: "Vendor",
+            detail: "Business · app",
+            kind: "mobile",
+          },
+          {
+            src: assets.tribeTia.src,
+            alt: assets.tribeTia.alt,
+            label: "Tia",
+            detail: "AI assistant · app",
+            kind: "mobile",
+          },
+          {
+            src: assets.tribeWallet.src,
+            alt: assets.tribeWallet.alt,
+            label: "Wallet",
+            detail: "Money · app",
+            kind: "mobile",
+          },
+          {
+            src: assets.tribeMarket.src,
+            alt: assets.tribeMarket.alt,
+            label: "Market",
+            detail: "Commerce · app",
+            kind: "mobile",
+          },
+          {
+            src: assets.tribeOrders.src,
+            alt: assets.tribeOrders.alt,
+            label: "Orders",
+            detail: "Operations · app",
+            kind: "mobile",
+          },
+          {
+            src: assets.tribeEarnings.src,
+            alt: assets.tribeEarnings.alt,
+            label: "Earnings",
+            detail: "Growth · app",
+            kind: "mobile",
+          },
+          {
+            src: assets.tribeAffiliate.src,
+            alt: assets.tribeAffiliate.alt,
+            label: "Affiliates",
+            detail: "Growth · app",
+            kind: "mobile",
+          },
+        ]}
+      />
+
       <div class="case-cta">
         <h2 class="display-3">Try it, or ask me about it.</h2>
         <div class="actions mt-1">
-          <a class="pill pill--ink" href={links.tribe} rel="noopener">Visit Tribe</a>
+          <a class="pill pill--ink" href="/#contact">Ask about Triber</a>
           <a class="pill pill--ghost" href="/#contact">Talk to {profile.name.split(" ")[0]}</a>
         </div>
       </div>

@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import Base from "../../layouts/Base.astro";
+import ProjectScreens from "../../components/ProjectScreens.astro";
 import { assets } from "../../content/assets";
 import { articles, links } from "../../content/site";
 import ArticleRow from "../../components/ArticleRow.astro";
@@ -83,6 +84,45 @@ import ArticleRow from "../../components/ArticleRow.astro";
           describe that honestly than claim credit for the whole publication.
         </p>
       </div>
+
+      <ProjectScreens
+        project="Bonteh"
+        eyebrow="Digital product"
+        title="An operating system for serious editorial work."
+        intro="The publication needed to hold ambitious reporting without making the reading experience feel heavy. These screens show the front page, a mobile read and a long-form article."
+        url="bontehmagazine.com"
+        theme="cream"
+        feature={{
+          src: assets.bontehWeb.src,
+          alt: assets.bontehWeb.alt,
+          label: "Bonteh Magazine — live homepage",
+          detail: "Desktop · bontehmagazine.com",
+          kind: "web",
+        }}
+        screens={[
+          {
+            src: assets.bontehLiveMobile.src,
+            alt: assets.bontehLiveMobile.alt,
+            label: "Homepage",
+            detail: "Mobile · live",
+            kind: "mobile",
+          },
+          {
+            src: assets.bontehArticleMobile.src,
+            alt: assets.bontehArticleMobile.alt,
+            label: "Article",
+            detail: "Mobile · reading view",
+            kind: "mobile",
+          },
+          {
+            src: assets.bontehArticle.src,
+            alt: assets.bontehArticle.alt,
+            label: "Long-form",
+            detail: "Desktop · article",
+            kind: "web",
+          },
+        ]}
+      />
 
       <h2 class="display-2 case-subhead">Selected writing</h2>
       <div class="writing__list">

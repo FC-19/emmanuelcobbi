@@ -8,7 +8,9 @@ import { about } from "../content/site";
   <div class="shell about">
     <div class="about__text" data-reveal>
       <p class="eyebrow">{about.eyebrow}</p>
-      <h2 class="display-2 about__title">{about.title}</h2>
+      <h2 class="display-2 about__title">
+        {about.title.map((line) => <span>{line}</span>)}
+      </h2>
       <div class="prose about__body">
         {about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
       </div>

@@ -42,6 +42,14 @@ for (const vp of viewports) {
   await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.setViewport({ ...vp, deviceScaleFactor: 1 });
 
+  await page.addStyleTag({
+    content:
+      "[data-subscription-popup], .subscription-popup, .cookie-consent, " +
+      "[class*=cookie-consent], [class*=newsletter-popup], " +
+      "#ghost-portal-root, .gh-portal-popup-container, .gh-portal-popup-wrapper { " +
+      "display: none !important; }",
+  });
+
   // Dismiss well-known overlays on third-party sites so the capture shows content.
   await page.evaluate(() => {
     const labels = ["reject optional", "accept all", "accept", "subscribe", "close", "no thanks"];
@@ -63,9 +71,23 @@ for (const vp of viewports) {
 
   await new Promise((r) => setTimeout(r, 2400));
   await page.evaluate(() => {
-    for (const el of document.querySelectorAll("[role=dialog], [class*=cookie], [class*=consent]")) {
+    for (const el of document.querySelectorAll(
+      "button[aria-label*=close i], button[title*=close i], [class*=close], [class*=dismiss]",
+    )) {
+      const rect = el.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) el.click();
+    }
+    for (const el of document.querySelectorAll(
+      "[role=dialog], [class*=modal], [class*=popup], [class*=overlay], [class*=cookie], [class*=consent]",
+    )) {
       const style = getComputedStyle(el);
-      if (style.position === "fixed") el.remove();
+      const rect = el.getBoundingClientRect();
+      if (
+        style.position === "fixed" ||
+        (rect.width * rect.height) / (window.innerWidth * window.innerHeight) > 0.08
+      ) {
+        el.remove();
+      }
     }
   });
   await new Promise((r) => setTimeout(r, 400));
